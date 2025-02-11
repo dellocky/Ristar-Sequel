@@ -7,11 +7,11 @@ import scripts.library.logic as logic
 class physics_sprite(sprite):
     def __init__(self, name, pos, hitbox_rect_size, groups, hitbox_rect_pos) -> None:
         super().__init__(name, pos, hitbox_rect_size, groups, hitbox_rect_pos)
-
+        self.count = 0
 
     def fall(self, delta_time):
-        if self.current_velocity[1] < 1200:
-            self.current_velocity[1] += 700 * delta_time
+        if self.current_velocity[1] < 1600:
+            self.current_velocity[1] += 800 * delta_time
 
     def collision_detection_x(self):
         current_tiles = []
@@ -22,7 +22,7 @@ class physics_sprite(sprite):
 
     def collision_detection_y(self):
         current_tiles = []
-        coordinates = (int(self.hitbox_rect.left//settings.TILE_SIZE),int(self.hitbox_rect.top//settings.TILE_SIZE))
+        coordinates = (int(self.hitbox_rect.centerx//settings.TILE_SIZE),int(self.hitbox_rect.bottom//settings.TILE_SIZE))
         for coordinate in logic.get_neighbors(coordinates):
             if coordinate in self.tile_map.keys():
                     self.collide_y(self.tile_map[coordinate])
@@ -40,6 +40,7 @@ class physics_sprite(sprite):
 
                 self.pos[1] = self.pos[1]+current_velocity[1]*delta_time
                 self.normalize_rects()
+                self.collide_ground = False
                 self.collision_detection_y()
                 
             
@@ -50,35 +51,42 @@ class physics_sprite(sprite):
 
     
     def collide_x(self, entity):
-
-        if self.hitbox_rect.colliderect(entity.hitbox_rect):
-            if self.current_velocity[0] > 0:
-                self.pos[0] = entity.hitbox_rect.left - self.hitbox_rect.width + self.hitbox_offset[0]
-                self.normalize_rects()
-                self.current_velocity[0] = 0
-            
-            if self.current_velocity[0] < 0:
-                self.pos[0] = entity.hitbox_rect.right + self.hitbox_offset[0]
-                self.normalize_rects()
-                self.current_velocity[0] = 0    
+        for rect in entity.hitbox_rects:
+            if self.hitbox_rect.colliderect(rect):
+                if self.current_velocity[0] > 0:
+                    self.pos[0] = entity.hitbox_rect.left - self.hitbox_rect.width + self.hitbox_offset[0]
+                    self.normalize_rects()
+                    self.current_velocity[0] = 0
+                
+                if self.current_velocity[0] < 0:
+                    self.pos[0] = entity.hitbox_rect.right + self.hitbox_offset[0]
+                    self.normalize_rects()
+                    self.current_velocity[0] = 0    
     
     def collide_y(self, entity):
-        if self.hitbox_rect.colliderect(entity.hitbox_rect):
-            if self.current_velocity[1] > 0:
-                self.pos[1] = entity.hitbox_rect.top - self.hitbox_rect.height + self.hitbox_offset[1]
-                self.normalize_rects()
-                self.current_velocity[1] = 0
-                self.collide_ground = True
+        for rect in entity.hitbox_rects:
+            if self.hitbox_rect.colliderect(rect) == 1:
+                if self.current_velocity[1] > 0:
+                    self.pos[1] = entity.hitbox_rect.top - self.hitbox_rect.height + self.hitbox_offset[1]
+                    self.normalize_rects()
+                    self.collide_ground = True
+                    self.current_velocity[1] = 0
+                    
+        
+                elif self.current_velocity[1] < 0:
+                    self.pos[1] = entity.hitbox_rect.bottom + self.hitbox_offset[1]
+                    self.normalize_rects()
+                    self.current_velocity[1] = 0
+            
 
-            if self.current_velocity[1] < 0:
-                self.pos[1] = entity.hitbox_rect.bottom + self.hitbox_offset[1]
-                self.normalize_rects()
-                self.current_velocity[1] = 0
+
+                
+
+                        
+                
+
                 
             
 
-            
-        
-
-   
+    
 

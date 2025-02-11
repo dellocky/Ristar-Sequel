@@ -1,12 +1,13 @@
 
 class animation_player:
-    def __init__(self, folder_map):
+    def __init__(self, folder_map, looping):
         
         self.folder_map = folder_map
         self.animation_time = 0
         self.folder_index = 0
         self.current_image = self.folder_map[self.folder_index][0]
         self.animation_change = False
+        self.looping = looping
 
             
     
@@ -17,7 +18,11 @@ class animation_player:
             self.animation_time -= self.folder_map[self.folder_index][1]
             self.folder_index += 1
             if self.folder_index == len(self.folder_map):
-                self.folder_index = 0
+                if self.looping == True:
+                    self.folder_index = 0
+                else: 
+                    self.folder_index -= 1
+                    return
             self.current_image = self.folder_map[self.folder_index][0]
             self.animation_change = True
 
@@ -29,5 +34,9 @@ class animation_player:
 
 
     def get_image(self):
-
+        
+        self.current_image = self.folder_map[self.folder_index][0]
         return self.current_image
+    
+    def change_animation(self):
+        self.animation_change = True

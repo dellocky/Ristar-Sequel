@@ -8,7 +8,7 @@ from scripts.library.settings import settings
 
 
 class rundune_1:
-    def __init__(self):
+    def __init__(self, display):
 
         self.entity_sprites = sprite_group()
         self.wall_sprites = sprite_group()
@@ -18,7 +18,7 @@ class rundune_1:
         self.create_map()
 
         self.player = player([0, 0], [self.entity_sprites], self.tile_map)
-        self.camera = camera(self.player)
+        self.camera = camera(display, self.player)
         self.create_map()
 
     def create_map(self):
@@ -49,12 +49,11 @@ class rundune_1:
 
         
     def draw(self, display):
-        self.camera.draw_ui(display, self.wall_sprites)
-        self.camera.draw_ui(display, self.entity_sprites)
+        self.camera.draw(display, self.wall_sprites)
+        self.camera.draw(display, self.entity_sprites)
 
     def run(self, event_list, delta_time, display):
         self.entity_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        debug(display, self.player.collide_ground)
-        #debug(display, self.player.hitbox_rect.bottomleft, y=25)
+        debug(display, self.player.jumping_animations["right"].folder_index)

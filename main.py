@@ -11,7 +11,7 @@ class game:
         self.display = pygame.Surface((480, 270))
         self.clock=pygame.time.Clock()
         self.previous_time = time()
-        self.level_manager = level_manager()
+        self.level_manager = level_manager(self.display)
 
     def run(self):
         while True:
