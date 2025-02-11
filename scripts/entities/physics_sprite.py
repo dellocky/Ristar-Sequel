@@ -34,6 +34,8 @@ class physics_sprite(sprite):
         self.pos = ([self.hitbox_rect.topleft[0] + self.hitbox_offset[0], self.hitbox_rect.topleft[1] + self.hitbox_offset[1]])
 
     def move(self, current_velocity, delta_time):
+
+
                 self.pos[0] = self.pos[0]+current_velocity[0]*delta_time
                 self.normalize_rects()
                 self.collision_detection_x()
@@ -53,6 +55,7 @@ class physics_sprite(sprite):
     def collide_x(self, entity):
         for rect in entity.hitbox_rects:
             if self.hitbox_rect.colliderect(rect):
+
                 if self.current_velocity[0] > 0:
                     self.pos[0] = entity.hitbox_rect.left - self.hitbox_rect.width + self.hitbox_offset[0]
                     self.normalize_rects()
@@ -65,18 +68,23 @@ class physics_sprite(sprite):
     
     def collide_y(self, entity):
         for rect in entity.hitbox_rects:
-            if self.hitbox_rect.colliderect(rect) == 1:
-                if self.current_velocity[1] > 0:
-                    self.pos[1] = entity.hitbox_rect.top - self.hitbox_rect.height + self.hitbox_offset[1]
-                    self.normalize_rects()
-                    self.collide_ground = True
-                    self.current_velocity[1] = 0
-                    
-        
-                elif self.current_velocity[1] < 0:
+            if self.current_velocity[1] > 0:
+                if entity.hitbox_rect.bottom > self.hitbox_rect.top:
+                    if  entity.hitbox_rect.top <= self.hitbox_rect.bottom and entity.hitbox_rect.right > self.hitbox_rect.left and entity.hitbox_rect.left < self.hitbox_rect.right:
+                        self.pos[1] = entity.hitbox_rect.top - self.hitbox_rect.height + self.hitbox_offset[1]
+                        self.pos[1] = round(self.pos[1])
+                        self.normalize_rects()
+                        self.collide_ground = True
+                        self.current_velocity[1] = 0
+
+            if self.hitbox_rect.colliderect(rect):
+                if self.current_velocity[1] < 0:
                     self.pos[1] = entity.hitbox_rect.bottom + self.hitbox_offset[1]
                     self.normalize_rects()
-                    self.current_velocity[1] = 0
+                    self.current_velocity[1] = 0    
+                
+                    
+
             
 
 

@@ -56,4 +56,4 @@ class rundune_1:
         self.entity_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        debug(display, self.player.jumping_animations["right"].folder_index)
+        #print(self.player.pos)

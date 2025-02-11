@@ -12,7 +12,7 @@ class sprite():
 
 
         self.pos = pos
-        self.hitbox_rect = pygame.rect.FRect(hitbox_rect_pos[0], hitbox_rect_pos[1], hitbox_rect_size[0], hitbox_rect_size[1])
+        self.hitbox_rect = pygame.rect.Rect(hitbox_rect_pos[0], hitbox_rect_pos[1], hitbox_rect_size[0], hitbox_rect_size[1])
         self.hitbox_offset = (hitbox_rect_pos[0] - pos[0], hitbox_rect_pos[1] - pos[1])
         try:
             self.default_height = self.surface_image.get_rect().height + 5

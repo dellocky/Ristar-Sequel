@@ -151,7 +151,7 @@ class player(physics_sprite):
                 self.reset_animations()
                 self.current_animation.change_animation()
             
-        elif self.collide_ground == True and self.movement == "falling":
+        elif self.collide_ground == True and (self.movement == "falling" or self.movement == "jumping"):
             self.falling_delay_timer = 0
             if self.current_velocity[0] != 0:
                 self.movement = "walking"
