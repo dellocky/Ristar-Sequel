@@ -5,8 +5,8 @@ import scripts.library.logic as logic
 
 
 class physics_sprite(sprite):
-    def __init__(self, name, pos, hitbox_rect_size, groups, hitbox_rect_pos) -> None:
-        super().__init__(name, pos, hitbox_rect_size, groups, hitbox_rect_pos)
+    def __init__(self, name, pos, hitbox_rect_size, groups, hitbox_rect_pos, buffer = 0) -> None:
+        super().__init__(name, pos, hitbox_rect_size, groups, hitbox_rect_pos, buffer)
         self.count = 0
 
     def fall(self, delta_time):

@@ -3,7 +3,7 @@ import scripts.library.animation_player as animation_player
 import pygame
 
 class sprite():
-    def __init__(self, name, pos, hitbox_rect_pos, groups, hitbox_rect_size) -> None:      
+    def __init__(self, name, pos, hitbox_rect_pos, groups, hitbox_rect_size, buffer = 0) -> None:      
     
         self.name = name
         self.groups = groups
@@ -15,7 +15,7 @@ class sprite():
         self.hitbox_rect = pygame.rect.Rect(hitbox_rect_pos[0], hitbox_rect_pos[1], hitbox_rect_size[0], hitbox_rect_size[1])
         self.hitbox_offset = (hitbox_rect_pos[0] - pos[0], hitbox_rect_pos[1] - pos[1])
         try:
-            self.default_height = self.surface_image.get_rect().height + 5
+            self.default_height = self.surface_image.get_rect().height + buffer
             self.height_difference = 5
         except:
             pass

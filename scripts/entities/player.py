@@ -94,7 +94,7 @@ class player(physics_sprite):
         self.surface_image = left_walking_animation[0][0]
         self.surface = pygame.surface.Surface((50, 50))
         self.surface.set_colorkey((0, 0, 1))
-        super().__init__("Player", pos, [pos[0] - 16, pos[1] - 12], groups, [16, 30])
+        super().__init__("Player", pos, [pos[0] - 16, pos[1] - 15], groups, [16, 30], buffer = 9)
 
         self.current_animation = self.animations_dict[self.movement][self.direction_animation]
 
@@ -156,11 +156,10 @@ class player(physics_sprite):
             if self.current_velocity[0] != 0:
                 self.movement = "walking"
                 self.reset_animations()
-                print("walk")
             else:
                 self.movement = "idle"
                 self.reset_animations()
-                print("idle")
+
                 
         
         if keys[pygame.K_SPACE] and self.jumps_current > 0: #save processing power unless input detected, eventloop needed to prevent hold down
