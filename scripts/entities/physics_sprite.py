@@ -9,9 +9,17 @@ class physics_sprite(sprite):
         super().__init__(name, pos, hitbox_rect_size, groups, hitbox_rect_pos, buffer)
         self.count = 0
 
+
     def fall(self, delta_time):
-        if self.current_velocity[1] < 1600:
-            self.current_velocity[1] += 800 * delta_time
+        if self.current_velocity[1] < 2000:
+            if abs(self.current_velocity[1]) < 25:
+                self.current_velocity[1] += 500 * delta_time
+            if abs(self.current_velocity[1]) < 50:
+                self.current_velocity[1] += 600 * delta_time
+            if abs(self.current_velocity[1]) < 250:
+                self.current_velocity[1] += 800 * delta_time
+            else:
+                self.current_velocity[1] += 1000 * delta_time
 
     def collision_detection_x(self):
         current_tiles = []

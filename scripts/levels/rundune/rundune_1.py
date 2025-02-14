@@ -49,6 +49,7 @@ class rundune_1:
 
         
     def draw(self, display):
+        self.camera.update()
         self.camera.draw(display, self.wall_sprites)
         self.camera.draw(display, self.entity_sprites)
 
@@ -56,4 +57,4 @@ class rundune_1:
         self.entity_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        #print(self.player.pos)
+        debug(display, (self.player.movement, self.player.direction_animation, self.player.current_animation.folder_index))

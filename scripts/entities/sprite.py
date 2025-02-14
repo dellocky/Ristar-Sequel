@@ -9,16 +9,19 @@ class sprite():
         self.groups = groups
         self.rgb = (255, 255, 255)
         self.image_rect = None
-
-
+        
         self.pos = pos
+
+        self.hitbox_surf = pygame.surface.Surface((hitbox_rect_size[0], hitbox_rect_size[1]))
         self.hitbox_rect = pygame.rect.Rect(hitbox_rect_pos[0], hitbox_rect_pos[1], hitbox_rect_size[0], hitbox_rect_size[1])
         self.hitbox_offset = (hitbox_rect_pos[0] - pos[0], hitbox_rect_pos[1] - pos[1])
         try:
-            self.default_height = self.surface_image.get_rect().height + buffer
-            self.height_difference = 5
+            self.size = [self.surface_image.get_rect().width, self.surface_image.get_rect().height]
+            self.default_height = self.size[1] + buffer
+            self.height_difference = buffer
         except:
             pass
+
         #self.pos = self.hitbox_rect.midbottom
 
         #self.speed = .575

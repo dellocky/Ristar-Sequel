@@ -6,7 +6,7 @@ class animation_player:
         self.animation_time = 0
         self.folder_index = 0
         self.current_image = self.folder_map[self.folder_index][0]
-        self.animation_change = False
+        self.animation_change = True
         self.looping = looping
 
             
@@ -30,6 +30,7 @@ class animation_player:
 
         self.folder_index = 0
         self.animation_time = 0
+        self.animation_change = True
         self.current_image = self.folder_map[self.folder_index][0]
 
 

@@ -7,7 +7,7 @@ from scripts.library.settings import settings
 class game:
     def __init__(self):
         pygame.init()
-        self.screen =  pygame.display.set_mode((1460, 810))
+        self.screen =  pygame.display.set_mode((1440, 810))
         self.display = pygame.Surface((480, 270))
         self.clock=pygame.time.Clock()
         self.previous_time = time()

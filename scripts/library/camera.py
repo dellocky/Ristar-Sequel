@@ -4,24 +4,55 @@ from scripts.library.settings import settings
 class camera:
     def __init__(self, display, player):
         self.display = display
-        self.half_width = display.get_size()[0]//2
-        self.half_height = display.get_size()[1]//2
-        #self.offset_default = pygame.math.Vector2()
+        half_width = display.get_size()[0]//2
+        half_height = display.get_size()[1]//2
+        invert_point = 2
+        screen_ratio = 3/4
+
+        self.camera_scroll_x_min = half_width * screen_ratio
+        self.camera_scroll_x_max = half_width * (invert_point - screen_ratio)
+
+        self.camera_scroll_x_min_pos = self.camera_scroll_x_min
+        self.camera_scroll_x_max_pos = self.camera_scroll_x_max
+
+        self.camera_scroll_y_min = half_height * screen_ratio
+        self.camera_scroll_y_max = half_height * (invert_point - screen_ratio)
+
+        self.camera_scroll_y_min_pos = self.camera_scroll_y_min
+        self.camera_scroll_y_max_pos = self.camera_scroll_y_max
+
+
+        self.offset = [0, 0]
         self.player = player
-
-        #self.offset_default.x = player.hitbox_rect.midright[0] - self.half_width - settings.TILE_SIZE/2
-        #self.offset_default.y = player.hitbox_rect.midright[1] - self.half_height + settings.TILE_SIZE
     
-    def draw(self, display, *sprites):
-        offset = [0, 0]
-        if self.player.pos[0] > self.half_width:
-            offset[0] = self.player.pos[0] - self.half_width
-        if self.player.pos[1] > self.half_height:
-            offset[1] = self.player.pos[1] - self.half_height
+    def update(self):
+        player_midpoint = [self.player.pos[0] + (self.player.size[0]/2), self.player.pos[1] + (self.player.size[1]/2)]
 
+        if player_midpoint[0] > self.camera_scroll_x_max_pos: #inital camera movement
+            self.offset[0] = player_midpoint[0] - self.camera_scroll_x_max
+            self.camera_scroll_x_max_pos = self.camera_scroll_x_max + self.offset[0]
+            self.camera_scroll_x_min_pos = self.camera_scroll_x_min + self.offset[0]   
+        
+        if player_midpoint[0] < self.camera_scroll_x_min_pos and player_midpoint[0] > self.camera_scroll_x_max:
+            self.offset[0] = player_midpoint[0] - self.camera_scroll_x_min
+            self.camera_scroll_x_max_pos = self.camera_scroll_x_max + self.offset[0]
+            self.camera_scroll_x_min_pos = self.camera_scroll_x_min + self.offset[0]
+
+        if player_midpoint[1] > self.camera_scroll_y_max_pos: #inital camera movement
+            self.offset[1] = player_midpoint[1] - self.camera_scroll_y_max
+            self.camera_scroll_y_max_pos = self.camera_scroll_y_max + self.offset[1]
+            self.camera_scroll_y_min_pos = self.camera_scroll_y_min + self.offset[1]   
+        
+        if player_midpoint[1] < self.camera_scroll_y_min_pos:
+            self.offset[1] = player_midpoint[1] - self.camera_scroll_y_min
+            self.camera_scroll_y_max_pos = self.camera_scroll_y_max + self.offset[1]
+            self.camera_scroll_y_min_pos = self.camera_scroll_y_min + self.offset[1]      
+
+   
+    def draw(self, display, *sprites):
         for sprite_groups in sprites:
             for sprite in sprite_groups:
-                offset_pos = (sprite.pos[0] - offset[0], sprite.pos[1] - offset[1])
+                offset_pos = (sprite.pos[0] - self.offset[0], sprite.pos[1] - self.offset[1])
                 display.blit(sprite.surface, offset_pos)
                 #pygame.draw.rect(display, (255, 0 ,0), sprite.hitbox_rect)
     
@@ -32,6 +63,7 @@ class camera:
                 display.blit(sprite.surface, sprite.pos)
                 #pygame.draw.rect(display, (255, 0 ,0), sprite.hitbox_rect)
         
+    """
     def lighten(self, display, *sprites):
 
         self.offset.x = self.player.hitbox_rect.centerx - self.half_width
@@ -62,6 +94,8 @@ class camera:
                 display.blit(sprite[0].surface, offset_pos, special_flags=pygame.BLEND_RGB_ADD)
             if sprite[1] == "sub":
                 display.blit(sprite[0].surface, offset_pos, special_flags=pygame.BLEND_RGB_SUB)
+    
+    """
 
 
 

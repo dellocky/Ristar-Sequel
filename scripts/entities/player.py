@@ -4,31 +4,40 @@ import scripts.library.asset_import as asset_import
 from scripts.entities.physics_sprite import physics_sprite
 
 
+
 class player(physics_sprite):
     def __init__(self, pos, groups, tile_map):
-
-        time_walk =.082
-        time_jump = time_walk * 2
-        self.reset_delay = time_walk
-        self.reset_delay_timer = 0
-        self.falling_delay = time_walk
-        self.falling_delay_timer = 0
-
-        self.idle_delay = .05
-        self.idle_delay_timer = 0
-   
-        self.walk_speed = 110
-        self.current_velocity = [0, 0]
-        self.jumps_maximum = 1
-        self.jumps_current = 1
-        self.collide_ground = False
 
         self.tile_map = tile_map
         self.direction_movement = 'right'
         self.direction_animation = 'right'
         self.movement = 'idle'
         self.action = 'none'
-        self.play_animation = True
+        
+        self.walk_speed = 130
+        self.current_velocity = [0, 0]
+        self.jumps_maximum = 1
+        self.jumps_current = 1
+        self.collide_ground = False
+
+        time_walk =.082
+        time_jump = time_walk * 2.5
+        
+        self.reset_delay = time_walk
+        self.reset_delay_timer = 0
+
+        self.falling_delay = time_walk
+        self.falling_delay_timer = 0
+    
+        self.idle_delay = .05
+        self.idle_delay_timer = 0
+
+        self.can_grab = True
+
+        #Debugging Tools<----------------------------------------------------------------> 
+        self.draw_hitbox_rect = False
+
+
         #down_idle_animation = asset_import.import_folder_with_time("assets/characters/main/idle/down", "main_idle_down")
         
                                                                       #assets/pictures/characters/player/walking/left/player_walking_left
@@ -64,8 +73,6 @@ class player(physics_sprite):
         right_falling_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/falling/right")
         for I, animation in enumerate(right_falling_animation):
              animation[1] = time_jump 
- 
-
 
         self.animations_dict = {}
 
@@ -103,19 +110,28 @@ class player(physics_sprite):
         
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
-        self.play_animation = True
 
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
             self.current_velocity[0] = 0
 
         elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            
+            if self.movement == "falling" and self.current_velocity[0] >= 0:
+                self.animations_dict[self.movement][self.direction_animation].animation_change = True
+                 
             self.current_velocity[0] = -self.walk_speed
             self.direction_movement = 'left'
             self.direction_animation = 'left'
             self.idle_delay_timer = 0
+   
+            
 
   
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+           
+            if self.movement == "falling" and self.current_velocity[0] <= 0:
+                  self.animations_dict[self.movement][self.direction_animation].animation_change = True
+                
             self.current_velocity[0] = self.walk_speed
             self.direction_movement = 'right'
             self.direction_animation = 'right'
@@ -155,9 +171,13 @@ class player(physics_sprite):
             self.falling_delay_timer = 0
             if self.current_velocity[0] != 0:
                 self.movement = "walking"
+                self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+                self.current_animation.change_animation()
                 self.reset_animations()
             else:
                 self.movement = "idle"
+                self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+                self.current_animation.change_animation()
                 self.reset_animations()
 
                 
@@ -165,11 +185,17 @@ class player(physics_sprite):
         if keys[pygame.K_SPACE] and self.jumps_current > 0: #save processing power unless input detected, eventloop needed to prevent hold down
             for event in event_loop:
                 if event.type == pygame.KEYDOWN and event.key == 32 and self.collide_ground == True:
-                    self.current_velocity[1] = -250
+                    self.current_velocity[1] = -300
                     self.movement = "jumping"
                     self.current_animation = self.animations_dict[self.movement][self.direction_animation]
                     self.current_animation.change_animation()
                     #self.jumps_current -= 1
+
+        if keys[pygame.K_e]:
+            for event in event_loop:
+                if event.type == pygame.KEYDOWN and event.key == 101 and self.can_grab == True:
+                    print("grab")
+                    
             
             
     def run(self, event_loop, delta_time):
@@ -177,15 +203,18 @@ class player(physics_sprite):
         self.input(event_loop, delta_time)
         self.move(self.current_velocity, delta_time)
         self.surface.fill((0, 0, 1))
-        self.surface.blit(self.surface_image, (0, -(self.height_difference))) 
+        if self.draw_hitbox_rect == True:
+            pygame.draw.rect(self.hitbox_surf, (0, 0, 255), self.hitbox_rect)
+            self.surface.blit(self.hitbox_surf, (-self.hitbox_offset[0], -self.hitbox_offset[1]))
+        self.surface.blit(self.surface_image, (0, -(self.height_difference)))
+ 
         #self.current_animation = self.animations_dict[self.movement][self.direction_animation]
         try:
             self.current_animation = self.animations_dict[self.movement][self.direction_animation]
-            if self.play_animation:
-                if self.action == "none":
-                    self.animate(self.current_animation, delta_time)
-                else:
-                    self.animate(self.current_animation, delta_time)
+            if self.action == "none":
+                self.animate(self.current_animation, delta_time)
+            else:
+                self.animate(self.current_animation, delta_time)
         except:
             pass
 
