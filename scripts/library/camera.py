@@ -7,7 +7,7 @@ class camera:
         half_width = display.get_size()[0]//2
         half_height = display.get_size()[1]//2
         invert_point = 2
-        screen_ratio = 3/4
+        screen_ratio = 7/8
 
         self.camera_scroll_x_min = half_width * screen_ratio
         self.camera_scroll_x_max = half_width * (invert_point - screen_ratio)
@@ -43,7 +43,7 @@ class camera:
             self.camera_scroll_y_max_pos = self.camera_scroll_y_max + self.offset[1]
             self.camera_scroll_y_min_pos = self.camera_scroll_y_min + self.offset[1]   
         
-        if player_midpoint[1] < self.camera_scroll_y_min_pos:
+        if player_midpoint[1] < self.camera_scroll_y_min_pos and player_midpoint[1] > self.camera_scroll_y_max:
             self.offset[1] = player_midpoint[1] - self.camera_scroll_y_min
             self.camera_scroll_y_max_pos = self.camera_scroll_y_max + self.offset[1]
             self.camera_scroll_y_min_pos = self.camera_scroll_y_min + self.offset[1]      
@@ -54,7 +54,9 @@ class camera:
             for sprite in sprite_groups:
                 offset_pos = (sprite.pos[0] - self.offset[0], sprite.pos[1] - self.offset[1])
                 display.blit(sprite.surface, offset_pos)
-                #pygame.draw.rect(display, (255, 0 ,0), sprite.hitbox_rect)
+                if sprite.draw_hitbox_rect == True:
+                    pygame.draw.rect(sprite.hitbox_surf, (0, 0, 255), sprite.hitbox_rect)
+                    display.blit(sprite.hitbox_surf, (sprite.hitbox_rect_pos[0], sprite.hitbox_rect_pos[1]))
     
     def draw_ui(self, display, *sprites):
         for sprite_groups in sprites:

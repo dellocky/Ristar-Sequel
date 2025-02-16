@@ -5,22 +5,28 @@ import scripts.library.logic as logic
 
 
 class physics_sprite(sprite):
-    def __init__(self, name, pos, hitbox_rect_size, groups, hitbox_rect_pos, buffer = 0) -> None:
-        super().__init__(name, pos, hitbox_rect_size, groups, hitbox_rect_pos, buffer)
-        self.count = 0
-
+    def __init__(self, name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer = 0) -> None:
+        super().__init__(name, pos,  groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer)
 
     def fall(self, delta_time):
-        if self.current_velocity[1] < 2000:
-            if abs(self.current_velocity[1]) < 25:
-                self.current_velocity[1] += 500 * delta_time
-            if abs(self.current_velocity[1]) < 50:
-                self.current_velocity[1] += 600 * delta_time
-            if abs(self.current_velocity[1]) < 250:
-                self.current_velocity[1] += 800 * delta_time
-            else:
-                self.current_velocity[1] += 1000 * delta_time
-
+        if self.current_velocity[1] < 4000:
+            #if abs(self.current_velocity[1]) < 25:
+                self.current_velocity[1] += 700 * delta_time
+                #print(1)
+            #elif abs(self.current_velocity[1]) < 50:
+                #self.current_velocity[1] += 525 * delta_time
+                #print(2)
+            #elif abs(self.current_velocity[1]) < 100:
+                #self.current_velocity[1] += 675 * delta_time
+                #print(3)
+            #elif abs(self.current_velocity[1]) < 200:
+                #self.current_velocity[1] += 925 * delta_time
+                #print(4)
+           
+            #else:
+                #self.current_velocity[1] +=  1175 * delta_time
+                #print(5)
+         
     def collision_detection_x(self):
         current_tiles = []
         coordinates = (int(self.hitbox_rect.left//settings.TILE_SIZE),int(self.hitbox_rect.top//settings.TILE_SIZE))

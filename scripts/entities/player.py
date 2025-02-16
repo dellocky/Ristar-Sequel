@@ -6,7 +6,7 @@ from scripts.entities.physics_sprite import physics_sprite
 
 
 class player(physics_sprite):
-    def __init__(self, pos, groups, tile_map):
+    def __init__(self, pos, self_groups, grab_arms_groups, tile_map):
 
         self.tile_map = tile_map
         self.direction_movement = 'right'
@@ -21,7 +21,7 @@ class player(physics_sprite):
         self.collide_ground = False
 
         time_walk =.082
-        time_jump = time_walk * 2.5
+        time_jump = time_walk * 2.4
         
         self.reset_delay = time_walk
         self.reset_delay_timer = 0
@@ -33,14 +33,6 @@ class player(physics_sprite):
         self.idle_delay_timer = 0
 
         self.can_grab = True
-
-        #Debugging Tools<----------------------------------------------------------------> 
-        self.draw_hitbox_rect = False
-
-
-        #down_idle_animation = asset_import.import_folder_with_time("assets/characters/main/idle/down", "main_idle_down")
-        
-                                                                      #assets/pictures/characters/player/walking/left/player_walking_left
         left_walking_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/walking/left")
         for I, animation in enumerate(left_walking_animation):
             animation[1] = time_walk 
@@ -60,19 +52,19 @@ class player(physics_sprite):
 
         left_jumping_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/jumping/left")
         for I, animation in enumerate(left_jumping_animation):
-             animation[1] = time_jump
+             animation[1] = time_jump 
 
         right_jumping_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/jumping/right")
         for I, animation in enumerate(right_jumping_animation):
-             animation[1] = time_jump
+             animation[1] = time_jump 
 
         left_falling_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/falling/left")
         for I, animation in enumerate(left_falling_animation):
-             animation[1] = time_jump
+             animation[1] = time_jump 
 
         right_falling_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/falling/right")
         for I, animation in enumerate(right_falling_animation):
-             animation[1] = time_jump 
+             animation[1] = time_jump
 
         self.animations_dict = {}
 
@@ -98,13 +90,9 @@ class player(physics_sprite):
         self.create_animation(right_falling_animation, self.falling_animations,  "right", looping = False)
         self.create_animation(left_falling_animation, self.falling_animations, "left", looping = False)
 
-        self.surface_image = left_walking_animation[0][0]
-        self.surface = pygame.surface.Surface((50, 50))
-        self.surface.set_colorkey((0, 0, 1))
-        super().__init__("Player", pos, [pos[0] - 16, pos[1] - 15], groups, [16, 30], buffer = 9)
+        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], left_walking_animation[0][0], buffer = 9)
 
         self.current_animation = self.animations_dict[self.movement][self.direction_animation]
-
 
     def input(self, event_loop, delta_time):
         
@@ -185,7 +173,7 @@ class player(physics_sprite):
         if keys[pygame.K_SPACE] and self.jumps_current > 0: #save processing power unless input detected, eventloop needed to prevent hold down
             for event in event_loop:
                 if event.type == pygame.KEYDOWN and event.key == 32 and self.collide_ground == True:
-                    self.current_velocity[1] = -300
+                    self.current_velocity[1] = -240
                     self.movement = "jumping"
                     self.current_animation = self.animations_dict[self.movement][self.direction_animation]
                     self.current_animation.change_animation()

@@ -3,15 +3,14 @@ import scripts.library.animation_player as animation_player
 import pygame
 
 class sprite():
-    def __init__(self, name, pos, hitbox_rect_pos, groups, hitbox_rect_size, buffer = 0) -> None:      
+    def __init__(self, name, pos, groups,  hitbox_rect_pos, hitbox_rect_size, surface_image, buffer = 0):      
     
         self.name = name
         self.groups = groups
         self.rgb = (255, 255, 255)
-        self.image_rect = None
-        
+        self.surface_image = surface_image
         self.pos = pos
-
+        self.hitbox_rect_pos = hitbox_rect_pos
         self.hitbox_surf = pygame.surface.Surface((hitbox_rect_size[0], hitbox_rect_size[1]))
         self.hitbox_rect = pygame.rect.Rect(hitbox_rect_pos[0], hitbox_rect_pos[1], hitbox_rect_size[0], hitbox_rect_size[1])
         self.hitbox_offset = (hitbox_rect_pos[0] - pos[0], hitbox_rect_pos[1] - pos[1])
@@ -22,12 +21,17 @@ class sprite():
         except:
             pass
 
-        #self.pos = self.hitbox_rect.midbottom
+        self.surface = pygame.surface.Surface((self.size[0], self.size[1] + buffer))
+        self.surface.blit(self.surface_image)
+        self.surface.set_colorkey((0, 0, 1))
+        
 
-        #self.speed = .575
-
+        #Debugging Tools<----------------------------------------------------------------> 
+        self.draw_hitbox_rect = False
         for I in groups:
             I.append(self)
+        
+        
             
     def create_animation(self, animation, dictionary, direction, looping = True):
 
@@ -39,7 +43,7 @@ class sprite():
         animation.tic(delta_time)
         if  animation.animation_change == True:
             self.surface_image = animation.current_image
-            self.height_difference = self.surface_image.get_rect().height - self.default_height# - 1
+            self.height_difference = self.surface_image.get_rect().height - self.default_height
             #self.hitbox_rect = self.surface_image.get_bounding_rect() #(midbottom=self.hitbox_rect.midbottom)
             #self.pos[1] = self.hitbox_rect.center[1]
             animation.animation_change = False

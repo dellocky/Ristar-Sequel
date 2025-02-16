@@ -10,14 +10,17 @@ from scripts.library.settings import settings
 class rundune_1:
     def __init__(self, display):
 
-        self.entity_sprites = sprite_group()
+        
         self.wall_sprites = sprite_group()
+        self.back_sprites = sprite_group()
+        self.entity_sprites = sprite_group()
+        self.front_sprites = sprite_group()
 
         self.tile_size = settings.TILE_SIZE
         self.tile_map = {}
         self.create_map()
 
-        self.player = player([0, 0], [self.entity_sprites], self.tile_map)
+        self.player = player([0, 0], [self.entity_sprites], [self.front_sprites, self.back_sprites], self.tile_map)
         self.camera = camera(display, self.player)
         self.create_map()
 
@@ -50,11 +53,14 @@ class rundune_1:
         
     def draw(self, display):
         self.camera.update()
+        self.camera.draw(display, self.back_sprites)
         self.camera.draw(display, self.wall_sprites)
         self.camera.draw(display, self.entity_sprites)
+        self.camera.draw(display, self.front_sprites)
 
     def run(self, event_list, delta_time, display):
         self.entity_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        debug(display, (self.player.movement, self.player.direction_animation, self.player.current_animation.folder_index))
+        debug(display, (self.player.pos))
+ 

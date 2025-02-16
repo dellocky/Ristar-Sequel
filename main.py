@@ -8,7 +8,7 @@ class game:
     def __init__(self):
         pygame.init()
         self.screen =  pygame.display.set_mode((1440, 810))
-        self.display = pygame.Surface((480, 270))
+        self.display = pygame.Surface((400, 225))
         self.clock=pygame.time.Clock()
         self.previous_time = time()
         self.level_manager = level_manager(self.display)
