@@ -44,6 +44,7 @@ class rundune_1:
                             #print([int(col)][1])
                             surf = graphics['Ground'][int(col)]
                             sprite = sprite_object(graphics['Ground'][int(col)],(x * self.tile_size ,y * self.tile_size),[self.wall_sprites], [self.tile_size, self.tile_size], surf)
+                            sprite.init()
                             self.tile_map[(x, y)] = sprite
         
         #tiles = sorted(self.tile_map.items(), key=operator.itemgetter(0))
@@ -53,7 +54,7 @@ class rundune_1:
         
     def draw(self, display):
         self.camera.update()
-        self.camera.draw(display, self.wall_sprites, self.back_sprites, self.entity_sprites, self.front_sprites)
+        self.camera.draw(display, self.back_sprites, self.wall_sprites, self.entity_sprites, self.front_sprites)
 
     def run(self, event_list, delta_time, display):
         self.back_sprites.run('run', event_list, delta_time)
