@@ -1,13 +1,14 @@
 import pygame
 import scripts.library.asset_import as asset_import
-#from scripts.library.animation_player import animation_player
 from scripts.entities.physics_sprite import physics_sprite
+from scripts.entities.projectiles.grab_arms import grab_arms
 
 
 
 class player(physics_sprite):
     def __init__(self, pos, self_groups, grab_arms_groups, tile_map):
-
+        self.grab_arms = []
+        self.grab_arms_groups = grab_arms_groups
         self.tile_map = tile_map
         self.direction_movement = 'right'
         self.direction_animation = 'right'
@@ -32,7 +33,11 @@ class player(physics_sprite):
         self.idle_delay = .05
         self.idle_delay_timer = 0
 
-        self.can_grab = True
+        self.movement_options = {
+            "move" : True,
+            "grab" : True
+        }
+        
         left_walking_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/walking/left")
         for I, animation in enumerate(left_walking_animation):
             animation[1] = time_walk 
@@ -93,6 +98,7 @@ class player(physics_sprite):
         super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], left_walking_animation[0][0], buffer = 9)
 
         self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+        #self.draw_hitbox_rect = True
 
     def input(self, event_loop, delta_time):
         
@@ -181,19 +187,16 @@ class player(physics_sprite):
 
         if keys[pygame.K_e]:
             for event in event_loop:
-                if event.type == pygame.KEYDOWN and event.key == 101 and self.can_grab == True:
-                    print("grab")
+                if event.type == pygame.KEYDOWN and event.key == 101 and self.movement_options['grab']== True:
+                    self.grab_arms.append(grab_arms(self.pos, self.direction_animation, self.grab_arms_groups))
                     
             
-            
+
     def run(self, event_loop, delta_time):
 
         self.input(event_loop, delta_time)
         self.move(self.current_velocity, delta_time)
         self.surface.fill((0, 0, 1))
-        if self.draw_hitbox_rect == True:
-            pygame.draw.rect(self.hitbox_surf, (0, 0, 255), self.hitbox_rect)
-            self.surface.blit(self.hitbox_surf, (-self.hitbox_offset[0], -self.hitbox_offset[1]))
         self.surface.blit(self.surface_image, (0, -(self.height_difference)))
  
         #self.current_animation = self.animations_dict[self.movement][self.direction_animation]
@@ -205,5 +208,6 @@ class player(physics_sprite):
                 self.animate(self.current_animation, delta_time)
         except:
             pass
+ 
 
         

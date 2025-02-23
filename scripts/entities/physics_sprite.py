@@ -36,13 +36,15 @@ class physics_sprite(sprite):
 
     def collision_detection_y(self):
         current_tiles = []
-        coordinates = (int(self.hitbox_rect.centerx//settings.TILE_SIZE),int(self.hitbox_rect.bottom//settings.TILE_SIZE))
+        coordinates = (int(self.hitbox_rect.centerx//settings.TILE_SIZE),int(self.hitbox_rect.top//settings.TILE_SIZE))
         for coordinate in logic.get_neighbors(coordinates):
             if coordinate in self.tile_map.keys():
                     self.collide_y(self.tile_map[coordinate])
     
     def normalize_rects(self):
-        self.hitbox_rect.center = ((self.pos[0]+(self.hitbox_rect.width/2)) - self.hitbox_offset[0], (self.pos[1]+(self.hitbox_rect.height/2) - self.hitbox_offset[1]))
+        self.hitbox_rect.center = (self.pos[0]+(self.hitbox_rect.width/2) - self.hitbox_offset[0], self.pos[1]+(self.hitbox_rect.height/2) - self.hitbox_offset[1])
+        for occlusion in self.occlusion_rects:
+            occlusion[2].center = (self.pos[0] + (occlusion[2].width/2) - occlusion[3][0], self.pos[1] + (occlusion[2].height/2) - occlusion[3][1])
     
     def normalize_pos(self):
         self.pos = ([self.hitbox_rect.topleft[0] + self.hitbox_offset[0], self.hitbox_rect.topleft[1] + self.hitbox_offset[1]])

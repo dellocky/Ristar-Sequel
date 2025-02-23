@@ -53,14 +53,13 @@ class rundune_1:
         
     def draw(self, display):
         self.camera.update()
-        self.camera.draw(display, self.back_sprites)
-        self.camera.draw(display, self.wall_sprites)
-        self.camera.draw(display, self.entity_sprites)
-        self.camera.draw(display, self.front_sprites)
+        self.camera.draw(display, self.wall_sprites, self.back_sprites, self.entity_sprites, self.front_sprites)
 
     def run(self, event_list, delta_time, display):
+        self.back_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('run', event_list, delta_time)
+        self.front_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        debug(display, (self.player.pos))
+        #debug(display, len(self.back_sprites))
  
