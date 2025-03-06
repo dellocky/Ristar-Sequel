@@ -1,5 +1,5 @@
 from scripts.entities.sprite import sprite
-from scripts.library.settings import settings
+from scripts.settings import settings
 import scripts.library.logic as logic
 
 
@@ -41,10 +41,8 @@ class physics_sprite(sprite):
             if coordinate in self.tile_map.keys():
                     self.collide_y(self.tile_map[coordinate])
     
-    def normalize_rects(self):
+    def normalize_rect(self):
         self.hitbox_rect.center = (self.pos[0]+(self.hitbox_rect.width/2) - self.hitbox_offset[0], self.pos[1]+(self.hitbox_rect.height/2) - self.hitbox_offset[1])
-        for occlusion in self.occlusion_rects:
-            occlusion[2].center = (self.pos[0] + (occlusion[2].width/2) - occlusion[3][0], self.pos[1] + (occlusion[2].height/2) - occlusion[3][1])
     
     def normalize_pos(self):
         self.pos = ([self.hitbox_rect.topleft[0] + self.hitbox_offset[0], self.hitbox_rect.topleft[1] + self.hitbox_offset[1]])
@@ -52,14 +50,15 @@ class physics_sprite(sprite):
     def move(self, current_velocity, delta_time):
 
 
-                self.pos[0] = self.pos[0]+current_velocity[0]*delta_time
-                self.normalize_rects()
+                self.pos[0] += current_velocity[0]*delta_time
+                self.normalize_rect()
                 self.collision_detection_x()
 
-                self.pos[1] = self.pos[1]+current_velocity[1]*delta_time
-                self.normalize_rects()
+                self.pos[1] += current_velocity[1]*delta_time
+                self.normalize_rect()
                 self.collide_ground = False
                 self.collision_detection_y()
+                self.normalize_rect()
                 
             
         #self.hitbox_rect.center = (self.pos[0]+(self.hitbox_rect.width/2),self.pos[1]+(self.hitbox_rect.height/2))
@@ -74,12 +73,10 @@ class physics_sprite(sprite):
 
                 if self.current_velocity[0] > 0:
                     self.pos[0] = entity.hitbox_rect.left - self.hitbox_rect.width + self.hitbox_offset[0]
-                    self.normalize_rects()
                     self.current_velocity[0] = 0
                 
                 if self.current_velocity[0] < 0:
                     self.pos[0] = entity.hitbox_rect.right + self.hitbox_offset[0]
-                    self.normalize_rects()
                     self.current_velocity[0] = 0    
     
     def collide_y(self, entity):
@@ -89,14 +86,12 @@ class physics_sprite(sprite):
                     if  entity.hitbox_rect.top <= self.hitbox_rect.bottom and entity.hitbox_rect.right > self.hitbox_rect.left and entity.hitbox_rect.left < self.hitbox_rect.right:
                         self.pos[1] = entity.hitbox_rect.top - self.hitbox_rect.height + self.hitbox_offset[1]
                         self.pos[1] = round(self.pos[1])
-                        self.normalize_rects()
                         self.collide_ground = True
                         self.current_velocity[1] = 0
 
             if self.hitbox_rect.colliderect(rect):
                 if self.current_velocity[1] < 0:
                     self.pos[1] = entity.hitbox_rect.bottom + self.hitbox_offset[1]
-                    self.normalize_rects()
                     self.current_velocity[1] = 0    
                 
                     

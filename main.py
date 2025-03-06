@@ -1,7 +1,7 @@
 import pygame, sys, scripts.library.debug as debug
 from time import time
 from scripts.levels.level_mananger import level_manager
-from scripts.library.settings import settings
+from scripts.settings import settings
 
 
 class game:
@@ -15,7 +15,7 @@ class game:
 
     def run(self):
         while True:
-
+            
             self.time = time()
             delta_time = self.time-self.previous_time
             self.previous_time = self.time

@@ -1,7 +1,7 @@
 from csv import reader
 from os import walk
 import pygame
-from scripts.library.settings import settings
+from scripts.settings import settings
 
 def csv_layout(path):
     map = []

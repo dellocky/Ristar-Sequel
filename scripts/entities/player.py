@@ -7,7 +7,7 @@ from scripts.entities.projectiles.grab_arms import grab_arms
 
 class player(physics_sprite):
     def __init__(self, pos, self_groups, grab_arms_groups, tile_map):
-        self.grab_arms = []
+        self.grab_arms = False
         self.grab_arms_groups = grab_arms_groups
         self.tile_map = tile_map
         self.direction_movement = 'right'
@@ -95,7 +95,7 @@ class player(physics_sprite):
         self.create_animation(right_falling_animation, self.falling_animations,  "right", looping = False)
         self.create_animation(left_falling_animation, self.falling_animations, "left", looping = False)
 
-        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], left_walking_animation[0][0], buffer = 9)
+        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], left_walking_animation[0][0], buffer = [0, 9])
 
         self.current_animation = self.animations_dict[self.movement][self.direction_animation]
         #self.draw_hitbox_rect = True
@@ -188,7 +188,8 @@ class player(physics_sprite):
         if keys[pygame.K_e]:
             for event in event_loop:
                 if event.type == pygame.KEYDOWN and event.key == 101 and self.movement_options['grab']== True:
-                    self.grab_arms.append(grab_arms(self.pos, self.direction_animation, self.grab_arms_groups))
+                    self.grab_arms = grab_arms(self.pos, self.direction_animation, self.grab_arms_groups)
+                    self.movement_options['grab'] = False
                     
             
 
@@ -198,7 +199,16 @@ class player(physics_sprite):
         self.move(self.current_velocity, delta_time)
         self.surface.fill((0, 0, 1))
         self.surface.blit(self.surface_image, (0, -(self.height_difference)))
- 
+
+        if self.grab_arms:
+            self.grab_arms.run(delta_time)
+            if self.grab_arms.destroy == True:
+                for group in self.grab_arms_groups:
+                    if len(group) > 0:
+                        group.pop(0)
+                        self.grab_arms = False
+                        self.movement_options['grab'] = True
+    
         #self.current_animation = self.animations_dict[self.movement][self.direction_animation]
         try:
             self.current_animation = self.animations_dict[self.movement][self.direction_animation]

@@ -1,5 +1,5 @@
 import pygame
-from library.settings import settings
+from scripts.settings import settings
 
 class bg_lighting:
 

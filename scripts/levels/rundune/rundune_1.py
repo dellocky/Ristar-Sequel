@@ -4,7 +4,8 @@ from scripts.library.camera import camera
 from scripts.library.debug import debug, get_time
 from scripts.entities.objects.sprite_object import sprite_object
 import scripts.library.asset_import as asset_import
-from scripts.library.settings import settings
+from scripts.settings import settings
+from scripts.layers import *
 
 
 class rundune_1:
@@ -16,13 +17,15 @@ class rundune_1:
         self.entity_sprites = sprite_group()
         self.front_sprites = sprite_group()
 
+        self.mask_layer = sprite_group()
+
         self.tile_size = settings.TILE_SIZE
         self.tile_map = {}
         self.create_map()
 
         self.player = player([0, 0], [self.entity_sprites], [self.front_sprites, self.back_sprites], self.tile_map)
         self.camera = camera(display, self.player)
-        self.create_map()
+
 
     def create_map(self):
 
@@ -44,7 +47,7 @@ class rundune_1:
                             #print([int(col)][1])
                             surf = graphics['Ground'][int(col)]
                             sprite = sprite_object(graphics['Ground'][int(col)],(x * self.tile_size ,y * self.tile_size),[self.wall_sprites], [self.tile_size, self.tile_size], surf)
-                            sprite.init()
+                            sprite.update()
                             self.tile_map[(x, y)] = sprite
         
         #tiles = sorted(self.tile_map.items(), key=operator.itemgetter(0))
@@ -54,12 +57,14 @@ class rundune_1:
         
     def draw(self, display):
         self.camera.update()
-        self.camera.draw(display, self.back_sprites, self.wall_sprites, self.entity_sprites, self.front_sprites)
+        self.camera.draw_ui(display, self.back_sprites, self.wall_sprites, self.entity_sprites, self.front_sprites)
+        
 
     def run(self, event_list, delta_time, display):
-        self.back_sprites.run('run', event_list, delta_time)
+        #self.back_sprites.run('run', event_list, delta_time)
+        #self.front_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('run', event_list, delta_time)
-        self.front_sprites.run('run', event_list, delta_time)
+        #self.front_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
         #debug(display, len(self.back_sprites))

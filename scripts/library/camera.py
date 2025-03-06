@@ -1,5 +1,5 @@
 import pygame
-from scripts.library.settings import settings
+from scripts.settings import settings
 
 class camera:
     def __init__(self, display, player):
@@ -61,8 +61,17 @@ class camera:
     def draw_ui(self, display, *sprites):
         for sprite_groups in sprites:
             for sprite in sprite_groups:
-                #pygame.draw.rect(display, (255, 0 ,0), sprite.hitbox_rect)
                 display.blit(sprite.surface, sprite.pos)
+                #if sprite.occlude:
+                    #for occlusion in sprite.occlusion_rects:
+                        #display.blit(occlusion[1].to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(0, 0, 255, 255)), occlusion[0])
+                        #display.blit(sprite.mask.to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(255, 0, 0, 255)), sprite.pos)
+                        #overlap_mask = sprite.mask.overlap_mask(occlusion[1], (occlusion[0][0] - sprite.pos[0], occlusion[0][1] - sprite.pos[1]))
+                        #overlap_surface = overlap_mask.to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(0, 0, 0, 255))
+                        #overlap_surface.set_colorkey((0, 0, 1))
+                        #display.blit(overlap_surface, sprite.pos)
+ 
+
                 #pygame.draw.rect(display, (255, 0 ,0), sprite.hitbox_rect)
         
     """
