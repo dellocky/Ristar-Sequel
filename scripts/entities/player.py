@@ -2,15 +2,14 @@ import pygame
 import scripts.library.asset_import as asset_import
 from scripts.entities.physics_sprite import physics_sprite
 from scripts.entities.projectiles.grab_arms import grab_arms
-
+from scripts.library.animation_controller import animation_controller
 
 
 class player(physics_sprite):
     def __init__(self, pos, self_groups, grab_arms_groups, tile_map):
+        self.tile_map = tile_map
         self.grab_arms = False
         self.grab_arms_groups = grab_arms_groups
-        self.tile_map = tile_map
-        self.direction_movement = 'right'
         self.direction_animation = 'right'
         self.movement = 'idle'
         self.action = 'none'
@@ -19,179 +18,172 @@ class player(physics_sprite):
         self.current_velocity = [0, 0]
         self.jumps_maximum = 1
         self.jumps_current = 1
-        self.collide_ground = False
 
         time_walk =.082
         time_jump = time_walk * 2.4
         
-        self.reset_delay = time_walk
+        self.reset_delay = time_walk * 4
         self.reset_delay_timer = 0
 
-        self.falling_delay = time_walk
+        self.falling_delay = time_walk 
         self.falling_delay_timer = 0
     
-        self.idle_delay = .05
+        self.idle_delay = .12
         self.idle_delay_timer = 0
 
         self.movement_options = {
             "move" : True,
-            "grab" : True
+            "grab" : True,
+            "jump" : True
         }
-        
-        left_walking_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/walking/left")
-        for I, animation in enumerate(left_walking_animation):
-            animation[1] = time_walk 
 
-        right_walking_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/walking/right")
-        for I, animation in enumerate(right_walking_animation):
-             animation[1] = time_walk 
+        self.animation_controller = animation_controller()
+        self.animation_controller.create_actions("walking", "idle", "jumping", "falling")
+        self.animation_controller.create_animation("assets/pictures/characters/player/walking/left", "walking", "left", time_walk)
+        self.animation_controller.create_animation("assets/pictures/characters/player/walking/right", "walking", "right", time_walk)    
+        self.animation_controller.create_animation("assets/pictures/characters/player/idle/left", "idle", "left", time_walk)            
+        self.animation_controller.create_animation("assets/pictures/characters/player/idle/right", "idle", "right", time_walk)
+        self.animation_controller.create_animation("assets/pictures/characters/player/jumping/left", "jumping", "left", time_jump, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/jumping/right", "jumping", "right", time_jump, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/falling/left", "falling", "left", time_jump, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/falling/right", "falling", "right", time_jump, looping = False)
 
-        
-        left_idle_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/idle/left")
-        for I, animation in enumerate(left_idle_animation):
-             animation[1] = time_walk 
+        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller.animations_dict["walking"]["left"].current_image, buffer = [0, 9])
 
-        right_idle_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/idle/right")
-        for I, animation in enumerate(right_idle_animation):
-             animation[1] = time_walk 
-
-        left_jumping_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/jumping/left")
-        for I, animation in enumerate(left_jumping_animation):
-             animation[1] = time_jump 
-
-        right_jumping_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/jumping/right")
-        for I, animation in enumerate(right_jumping_animation):
-             animation[1] = time_jump 
-
-        left_falling_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/falling/left")
-        for I, animation in enumerate(left_falling_animation):
-             animation[1] = time_jump 
-
-        right_falling_animation = asset_import.import_folder_with_time("assets/pictures/characters/player/falling/right")
-        for I, animation in enumerate(right_falling_animation):
-             animation[1] = time_jump
-
-        self.animations_dict = {}
-
-        self.walking_animations = {}
-        self.idle_animations = {}
-        self.jumping_animations = {}
-        self.falling_animations = {}
-
-        self.animations_dict["walking"] = self.walking_animations
-        self.animations_dict["idle"] = self.idle_animations
-        self.animations_dict["jumping"] = self.jumping_animations
-        self.animations_dict["falling"] = self.falling_animations
-
-        self.create_animation(right_walking_animation, self.walking_animations, "right")
-        self.create_animation(left_walking_animation, self.walking_animations, "left")
-        
-        self.create_animation(right_idle_animation, self.idle_animations, "right")
-        self.create_animation(left_idle_animation, self.idle_animations, "left")
-
-        self.create_animation(right_jumping_animation, self.jumping_animations,  "right", looping = False)
-        self.create_animation(left_jumping_animation, self.jumping_animations, "left", looping = False)
-
-        self.create_animation(right_falling_animation, self.falling_animations,  "right", looping = False)
-        self.create_animation(left_falling_animation, self.falling_animations, "left", looping = False)
-
-        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], left_walking_animation[0][0], buffer = [0, 9])
-
-        self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+        self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
         #self.draw_hitbox_rect = True
 
     def input(self, event_loop, delta_time):
         
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
+        #Movement
+        if self.movement_options["move"]:
+            if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
+                self.current_velocity[0] = 0
 
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-            self.current_velocity[0] = 0
+            elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                self.current_velocity[0] = -self.walk_speed
+                self.direction_animation = 'left'
+                self.reset_delay_timer = 0
+                self.idle_delay_timer = 0
+    
+            elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                self.current_velocity[0] = self.walk_speed
+                self.direction_animation = 'right'
+                self.reset_delay_timer = 0
+                self.idle_delay_timer = 0
 
-        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            
-            if self.movement == "falling" and self.current_velocity[0] >= 0:
-                self.animations_dict[self.movement][self.direction_animation].animation_change = True
-                 
-            self.current_velocity[0] = -self.walk_speed
-            self.direction_movement = 'left'
-            self.direction_animation = 'left'
-            self.idle_delay_timer = 0
-   
-            
-
-  
-        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-           
-            if self.movement == "falling" and self.current_velocity[0] <= 0:
-                  self.animations_dict[self.movement][self.direction_animation].animation_change = True
-                
-            self.current_velocity[0] = self.walk_speed
-            self.direction_movement = 'right'
-            self.direction_animation = 'right'
-            self.reset_delay_timer = 0
-            self.idle_delay_timer = 0
-
-        else:
-            self.current_velocity[0] = 0
-       
-        if self.movement == 'idle' and (self.current_velocity[0] > 0 or self.current_velocity[0] < 0):
+            else:
+                self.current_velocity[0] = 0
+        
+        #From Idle to Walking Animation---> 
+        if self.movement == 'idle' and (self.current_velocity[0] != 0):
             self.movement = 'walking'
-            self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+            self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
             self.current_animation.change_animation()
             self.reset_delay_timer = 0
             self.idle_delay_timer = 0
-            #self.reset_animations()
+            #self.animation_controller.reset_animations()
 
+        #From Walking to Idle Animation---> 
         elif self.movement == 'walking' and self.current_velocity[0] == 0:
             self.reset_delay_timer += delta_time
             self.idle_delay_timer += delta_time
             if self.idle_delay_timer >= self.idle_delay:
                 self.movement = 'idle'
-                self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
                 self.current_animation.change_animation()
             if self.reset_delay_timer >= self.reset_delay:
-                self.reset_animations()
-        
-        if self.collide_ground == False and self.current_velocity[1] > 0 and self.movement != "falling":
+                self.animation_controller.reset_animations()
+
+        #Touching the Ground
+        elif self.collide_ground and (self.movement == "falling" or self.movement == "jumping"):
+            self.falling_delay_timer = 0
+            if not self.movement_options["grab"]:
+                    self.movement_options["move"] = False
+                    self.current_velocity[0] = 0
+
+            elif self.current_velocity[0] != 0:
+                self.movement = "walking"
+                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.current_animation.change_animation()
+                self.animation_controller.reset_animations()
+
+            else:
+                self.movement = "idle"
+                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.current_animation.change_animation()
+                self.animation_controller.reset_animations()
+            
+        #Entering falling state
+        if not self.collide_ground and self.current_velocity[1] > 0 and self.movement != "falling":
             self.falling_delay_timer += delta_time
             if self.falling_delay_timer >= self.falling_delay:
                 self.movement = 'falling'
-                self.current_animation = self.animations_dict[self.movement][self.direction_animation]
-                self.reset_animations()
+                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.animation_controller.reset_animations()
                 self.current_animation.change_animation()
-            
-        elif self.collide_ground == True and (self.movement == "falling" or self.movement == "jumping"):
-            self.falling_delay_timer = 0
-            if self.current_velocity[0] != 0:
-                self.movement = "walking"
-                self.current_animation = self.animations_dict[self.movement][self.direction_animation]
-                self.current_animation.change_animation()
-                self.reset_animations()
-            else:
-                self.movement = "idle"
-                self.current_animation = self.animations_dict[self.movement][self.direction_animation]
-                self.current_animation.change_animation()
-                self.reset_animations()
 
                 
-        
-        if keys[pygame.K_SPACE] and self.jumps_current > 0: #save processing power unless input detected, eventloop needed to prevent hold down
+        #Jumping
+        if keys[pygame.K_SPACE] and self.jumps_current > 0: 
             for event in event_loop:
-                if event.type == pygame.KEYDOWN and event.key == 32 and self.collide_ground == True:
+                if event.type == pygame.KEYDOWN and event.key == 32 and self.collide_ground and self.movement_options['jump']:
                     self.current_velocity[1] = -240
                     self.movement = "jumping"
-                    self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+                    self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
                     self.current_animation.change_animation()
                     #self.jumps_current -= 1
 
+        #Grabbing
         if keys[pygame.K_e]:
             for event in event_loop:
-                if event.type == pygame.KEYDOWN and event.key == 101 and self.movement_options['grab']== True:
-                    self.grab_arms = grab_arms(self.pos, self.direction_animation, self.grab_arms_groups)
-                    self.movement_options['grab'] = False
+                if event.type == pygame.KEYDOWN and event.key == 101 and self.movement_options['grab']:
+                    grab_direction = self.get_direction(keys)
+                    if grab_direction != "none":
+                        if self.collide_ground:
+                            if grab_direction == "downright":
+                                grab_direction = "right"
+                            elif grab_direction == "downleft":
+                                grab_direction = "left"
+                            elif grab_direction == "down":
+                                grab_direction = self.direction_animation
+                                
+                        self.direction_animation = grab_direction
                     
+
+                    self.grab_arms = grab_arms(self.pos, self.direction_animation, self.grab_arms_groups)
+                    self.movement = "grabing"
+                    self.movement_options['grab'] = False
+                    self.movement_options['jump'] = False
+                    if self.collide_ground:
+                        self.movement_options['move'] = False
+                        self.current_velocity[0] = 0
+                    
+    def get_direction(self, keys):
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            if keys[pygame.K_UP] or keys[pygame.K_w]:
+                return "upleft"
+            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+                return "downleft"
+            else:
+                return "left"
             
+        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            if keys[pygame.K_UP] or keys[pygame.K_w]:
+                return "upright"
+            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+                return "downright"
+            else:
+                return "right"
+        elif keys[pygame.K_UP] or keys[pygame.K_w]:
+            return "up"
+        elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            return "down"
+        
+        else: return "none"
+
 
     def run(self, event_loop, delta_time):
 
@@ -202,20 +194,28 @@ class player(physics_sprite):
 
         if self.grab_arms:
             self.grab_arms.run(delta_time)
+            self.grab_arms.update_pos(self.pos)
             if self.grab_arms.destroy == True:
                 for group in self.grab_arms_groups:
                     if len(group) > 0:
                         group.pop(0)
-                        self.grab_arms = False
-                        self.movement_options['grab'] = True
+                self.grab_arms = False
+                self.movement = "idle"
+                self.movement_options['grab'] = True
+                self.movement_options['move'] = True
+                self.movement_options['jump'] = True
+                self.animation_controller.reset_animations()
     
-        #self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+        #self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
         try:
-            self.current_animation = self.animations_dict[self.movement][self.direction_animation]
+            self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+            self.current_animation
             if self.action == "none":
-                self.animate(self.current_animation, delta_time)
+                self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
+                self.update_image_offset()
             else:
-                self.animate(self.current_animation, delta_time)
+                self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
+                self.update_image_offset()
         except:
             pass
  

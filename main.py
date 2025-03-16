@@ -14,7 +14,7 @@ class game:
         self.level_manager = level_manager(self.display)
 
     def run(self):
-        while True:
+        while True: 
             
             self.time = time()
             delta_time = self.time-self.previous_time
@@ -27,10 +27,12 @@ class game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-            
+
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
+            #debug.debug(self.screen, self.clock.get_fps())# display fps with this
             pygame.display.update()
             self.clock.tick(settings.FPS)
+   
 
 if __name__ == '__main__':
     

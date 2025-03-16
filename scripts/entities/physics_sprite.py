@@ -5,28 +5,18 @@ import scripts.library.logic as logic
 
 
 class physics_sprite(sprite):
-    def __init__(self, name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer = 0) -> None:
-        super().__init__(name, pos,  groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer)
+    def __init__(self, name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer = [0, 0]) -> None:
+        # Convert single buffer value to proper buffer format for sprite class
+        buffer_leftup = [0, buffer[1]] if isinstance(buffer, list) else [0, buffer]
+        buffer_downright = [0, 0]  # We keep this as 0 since we only need upward buffer
+        super().__init__(name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer_leftup=buffer_leftup, buffer_downright=buffer_downright)
+        self.buffer = buffer_leftup  # Store buffer for use in animation
+        self.collide_ground = False
 
     def fall(self, delta_time):
         if self.current_velocity[1] < 4000:
-            #if abs(self.current_velocity[1]) < 25:
                 self.current_velocity[1] += 700 * delta_time
-                #print(1)
-            #elif abs(self.current_velocity[1]) < 50:
-                #self.current_velocity[1] += 525 * delta_time
-                #print(2)
-            #elif abs(self.current_velocity[1]) < 100:
-                #self.current_velocity[1] += 675 * delta_time
-                #print(3)
-            #elif abs(self.current_velocity[1]) < 200:
-                #self.current_velocity[1] += 925 * delta_time
-                #print(4)
-           
-            #else:
-                #self.current_velocity[1] +=  1175 * delta_time
-                #print(5)
-         
+     
     def collision_detection_x(self):
         current_tiles = []
         coordinates = (int(self.hitbox_rect.left//settings.TILE_SIZE),int(self.hitbox_rect.top//settings.TILE_SIZE))

@@ -44,15 +44,11 @@ class rundune_1:
                     y = row_index 
                     if col != '-1':
                         if style == 'Ground':
-                            #print([int(col)][1])
                             surf = graphics['Ground'][int(col)]
                             sprite = sprite_object(graphics['Ground'][int(col)],(x * self.tile_size ,y * self.tile_size),[self.wall_sprites], [self.tile_size, self.tile_size], surf)
                             sprite.update()
                             self.tile_map[(x, y)] = sprite
         
-        #tiles = sorted(self.tile_map.items(), key=operator.itemgetter(0))
-        #for tile in tiles:
-            #print(tile[1].pos)
 
         
     def draw(self, display):
@@ -61,11 +57,8 @@ class rundune_1:
         
 
     def run(self, event_list, delta_time, display):
-        #self.back_sprites.run('run', event_list, delta_time)
-        #self.front_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('run', event_list, delta_time)
-        #self.front_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        #debug(display, len(self.back_sprites))
+        #debug(display, self.player.current_animation.folder_index)
  
