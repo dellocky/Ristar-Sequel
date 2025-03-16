@@ -39,43 +39,12 @@ class sprite():
         #self.fill_color_1 = (20, 20, 20)
         #self.fill_color_2 = (20, 20, 255)
         self.draw_hitbox_rect = False
-        
-        
-        
-        
         for I in groups:
             I.append(self)
         
-
-    def animate(self, animation, delta_time):
-        
-        animation.tic(delta_time)
-        if  animation.animation_change == True:
-            self.surface_image = animation.current_image
-            self.height_difference = self.surface_image.get_rect().height - self.height_default
-            self.width_difference = self.surface_image.get_rect().width - self.width_default
-            #self.hitbox_rect = self.surface_image.get_bounding_rect() #(midbottom=self.hitbox_rect.midbottom)
-            #self.pos[1] = self.hitbox_rect.center[1]
-            animation.animation_change = False
-            #print(self.height_difference)
-    
-    def get_image(self, animation, index):
-
-        animation.folder_index = index
-        self.surface_image = self.current_animation.get_image()
+    def update_image_offset(self):
         self.height_difference = self.surface_image.get_rect().height - self.height_default
         self.width_difference = self.surface_image.get_rect().width - self.width_default
-
-
-    def reset_animations(self):
-
-        for animations in self.animations_dict.values():
-            for animation in animations.values():
-                animation.reset()
-        try: 
-            self.surface_image = self.animations_dict[self.action][self.direction_animation].get_image()
-        except:
-            pass
     
     def create_occlusion_rect(self, pos_x, pos_y, width, height):
 

@@ -36,9 +36,9 @@ class player(physics_sprite):
             "grab" : True,
             "jump" : True
         }
+
         self.animation_controller = animation_controller()
         self.animation_controller.create_actions("walking", "idle", "jumping", "falling")
-
         self.animation_controller.create_animation("assets/pictures/characters/player/walking/left", "walking", "left", time_walk)
         self.animation_controller.create_animation("assets/pictures/characters/player/walking/right", "walking", "right", time_walk)    
         self.animation_controller.create_animation("assets/pictures/characters/player/idle/left", "idle", "left", time_walk)            
@@ -49,8 +49,6 @@ class player(physics_sprite):
         self.animation_controller.create_animation("assets/pictures/characters/player/falling/right", "falling", "right", time_jump, looping = False)
 
         super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller.animations_dict["walking"]["left"].current_image, buffer = [0, 9])
-        print(self.height_difference)
-        print(self.height_default)
 
         self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
         #self.draw_hitbox_rect = True
@@ -101,7 +99,6 @@ class player(physics_sprite):
 
         #Touching the Ground
         elif self.collide_ground and (self.movement == "falling" or self.movement == "jumping"):
-            print(self.height_difference)
             self.falling_delay_timer = 0
             if not self.movement_options["grab"]:
                     self.movement_options["move"] = False
@@ -212,10 +209,13 @@ class player(physics_sprite):
         #self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
         try:
             self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+            self.current_animation
             if self.action == "none":
-                self.animate(self.current_animation, delta_time)
+                self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
+                self.update_image_offset()
             else:
-                self.animate(self.current_animation, delta_time)
+                self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
+                self.update_image_offset()
         except:
             pass
  
