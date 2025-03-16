@@ -37,13 +37,12 @@ def get_folder_names(path):
     
 
 
-def import_folder_with_time(path, scale=(-1,-1)):
+def import_folder_with_time(path, duration=0.082, scale=(-1,-1)):
     surface_list = []
     count = 0   
     for __,__,img_files  in walk(path):
         for image in img_files:
             full_path = f"{path}/{count}.png"
-            count += 1
             image_surf = pygame.image.load(full_path).convert_alpha()
             if scale[0] and scale[1] > -1:
                 pass
@@ -51,7 +50,15 @@ def import_folder_with_time(path, scale=(-1,-1)):
             else:
                 pass
                 #image_surf = pygame.transform.smoothscale(image_surf, (settings.SCALE*settings.TILE_SIZE, settings.SCALE*settings.TILE_SIZE))
-            surface_list.append([image_surf, 0])
+            
+            # If duration is a list, use the corresponding duration for this frame
+            # If the frame index is beyond the list length, use the last duration
+            if isinstance(duration, list) and count < len(duration):
+                frame_duration = duration[count]
+            else:
+                frame_duration = duration
+            surface_list.append([image_surf, frame_duration])
+            count += 1
         return surface_list
     
 

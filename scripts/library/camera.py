@@ -62,7 +62,10 @@ class camera:
         for sprite_groups in sprites:
             for sprite in sprite_groups:
                 display.blit(sprite.surface, sprite.pos)
-                #if sprite.occlude:
+             
+        
+    """
+    #if sprite.occlude: keep this, its fun!!!
                     #for occlusion in sprite.occlusion_rects:
                         #display.blit(occlusion[1].to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(0, 0, 255, 255)), occlusion[0])
                         #display.blit(sprite.mask.to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(255, 0, 0, 255)), sprite.pos)
@@ -74,8 +77,8 @@ class camera:
 
                 #pygame.draw.rect(display, (255, 0 ,0), sprite.hitbox_rect)
         
-    """
     def lighten(self, display, *sprites):
+    
 
         self.offset.x = self.player.hitbox_rect.centerx - self.half_width
         self.offset.y = self.player.hitbox_rect.centery - self.half_height
