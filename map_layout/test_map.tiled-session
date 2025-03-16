@@ -1,0 +1,48 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "C:/Users/footb/OneDrive/Desktop/Witch/map_layout/Game Jam.tsx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "C:/Users/footb/OneDrive/Desktop/Witch/map_layout/Game Jam.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "test_tiles.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "untitled.tmx": {
+            "scale": 0.8728124999999999,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 478.9115646258504,
+                "y": 320.2291442892947
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/Users/footb/OneDrive/Desktop/Ristar/map_layout",
+    "last.imagePath": "C:/Users/footb/OneDrive/Desktop/ninja_game/data/images/tiles/grass",
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "untitled.tmx",
+        "test_tiles.tsx",
+        "C:/Users/footb/OneDrive/Desktop/Witch/map_layout/Game Jam.tsx"
+    ],
+    "project": "test_map.tiled-project",
+    "recentFiles": [
+        "untitled.tmx",
+        "test_tiles.tsx",
+        "C:/Users/footb/OneDrive/Desktop/Witch/map_layout/Game Jam.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 1
+}
