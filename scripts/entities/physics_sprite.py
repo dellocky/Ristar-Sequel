@@ -1,6 +1,6 @@
 from scripts.entities.sprite import sprite
-from scripts.settings import settings
-import scripts.library.logic as logic
+from scripts.library.objects.settings import settings
+import scripts.library.functions.logic as logic
 
 
 

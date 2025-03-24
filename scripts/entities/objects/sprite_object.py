@@ -1,6 +1,6 @@
 import pygame 
 from scripts.entities.sprite import sprite
-from scripts.settings import settings
+from scripts.library.objects.settings import settings
 
     
 class sprite_object(sprite):

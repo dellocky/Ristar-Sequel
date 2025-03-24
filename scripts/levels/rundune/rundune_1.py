@@ -1,11 +1,11 @@
 from scripts.entities.player import player
-from scripts.library.sprite_group import sprite_group
-from scripts.library.camera import camera
-from scripts.library.debug import debug, get_time
+from scripts.library.classes.sprite_group import sprite_group
+from scripts.library.classes.camera import camera
+from scripts.library.functions.debug import debug, get_time
 from scripts.entities.objects.sprite_object import sprite_object
-import scripts.library.asset_import as asset_import
-from scripts.settings import settings
-from scripts.layers import *
+import scripts.library.functions.asset_import as asset_import
+from scripts.library.objects.settings import settings
+
 
 
 class rundune_1:
@@ -53,7 +53,7 @@ class rundune_1:
         
     def draw(self, display):
         self.camera.update()
-        self.camera.draw(display, self.back_sprites, self.wall_sprites, self.entity_sprites, self.front_sprites)
+        self.camera.draw(display, self.wall_sprites, self.back_sprites, self.entity_sprites, self.front_sprites)
         
 
     def run(self, event_list, delta_time, display):

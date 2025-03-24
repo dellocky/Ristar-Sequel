@@ -1,7 +1,7 @@
-from scripts.settings import settings
-from scripts.library.occlusion import occlusion
+from scripts.library.objects.settings import settings
+from scripts.library.classes.occlusion import occlusion
 #from scripts.layers import mask_layer
-import scripts.library.animation_player as animation_player
+import scripts.library.classes.animation_player as animation_player
 import pygame
 
 class sprite():

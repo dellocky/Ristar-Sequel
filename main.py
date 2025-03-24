@@ -1,7 +1,7 @@
-import pygame, sys, scripts.library.debug as debug
+import pygame, sys, scripts.library.functions.debug as debug
 from time import time
 from scripts.levels.level_mananger import level_manager
-from scripts.settings import settings
+from scripts.library.objects.settings import settings
 
 
 class game:

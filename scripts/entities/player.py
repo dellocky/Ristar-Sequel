@@ -1,8 +1,8 @@
 import pygame
-import scripts.library.asset_import as asset_import
+import scripts.library.functions.asset_import as asset_import
 from scripts.entities.physics_sprite import physics_sprite
 from scripts.entities.projectiles.grab_arms import grab_arms
-from scripts.library.animation_controller import animation_controller
+from scripts.library.classes.animation_controller import animation_controller
 
 
 class player(physics_sprite):
@@ -48,9 +48,9 @@ class player(physics_sprite):
         self.animation_controller.create_animation("assets/pictures/characters/player/falling/left", "falling", "left", time_jump, looping = False)
         self.animation_controller.create_animation("assets/pictures/characters/player/falling/right", "falling", "right", time_jump, looping = False)
 
-        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller.animations_dict["walking"]["left"].current_image, buffer = [0, 9])
+        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller["walking"]["left"].current_image, buffer = [0, 9])
 
-        self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+        self.current_animation = self.animation_controller[self.movement][self.direction_animation]
         #self.draw_hitbox_rect = True
 
     def input(self, event_loop, delta_time):
@@ -80,7 +80,7 @@ class player(physics_sprite):
         #From Idle to Walking Animation---> 
         if self.movement == 'idle' and (self.current_velocity[0] != 0):
             self.movement = 'walking'
-            self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+            self.current_animation = self.animation_controller[self.movement][self.direction_animation]
             self.current_animation.change_animation()
             self.reset_delay_timer = 0
             self.idle_delay_timer = 0
@@ -92,7 +92,7 @@ class player(physics_sprite):
             self.idle_delay_timer += delta_time
             if self.idle_delay_timer >= self.idle_delay:
                 self.movement = 'idle'
-                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.current_animation = self.animation_controller[self.movement][self.direction_animation]
                 self.current_animation.change_animation()
             if self.reset_delay_timer >= self.reset_delay:
                 self.animation_controller.reset_animations()
@@ -106,13 +106,13 @@ class player(physics_sprite):
 
             elif self.current_velocity[0] != 0:
                 self.movement = "walking"
-                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.current_animation = self.animation_controller[self.movement][self.direction_animation]
                 self.current_animation.change_animation()
                 self.animation_controller.reset_animations()
 
             else:
                 self.movement = "idle"
-                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.current_animation = self.animation_controller[self.movement][self.direction_animation]
                 self.current_animation.change_animation()
                 self.animation_controller.reset_animations()
             
@@ -121,7 +121,7 @@ class player(physics_sprite):
             self.falling_delay_timer += delta_time
             if self.falling_delay_timer >= self.falling_delay:
                 self.movement = 'falling'
-                self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                self.current_animation = self.animation_controller[self.movement][self.direction_animation]
                 self.animation_controller.reset_animations()
                 self.current_animation.change_animation()
 
@@ -132,7 +132,7 @@ class player(physics_sprite):
                 if event.type == pygame.KEYDOWN and event.key == 32 and self.collide_ground and self.movement_options['jump']:
                     self.current_velocity[1] = -240
                     self.movement = "jumping"
-                    self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+                    self.current_animation = self.animation_controller[self.movement][self.direction_animation]
                     self.current_animation.change_animation()
                     #self.jumps_current -= 1
 
@@ -193,8 +193,8 @@ class player(physics_sprite):
         self.surface.blit(self.surface_image, (0, -(self.height_difference)))
 
         if self.grab_arms:
-            self.grab_arms.run(delta_time)
             self.grab_arms.update_pos(self.pos)
+            self.grab_arms.run(delta_time)
             if self.grab_arms.destroy == True:
                 for group in self.grab_arms_groups:
                     if len(group) > 0:
@@ -206,9 +206,9 @@ class player(physics_sprite):
                 self.movement_options['jump'] = True
                 self.animation_controller.reset_animations()
     
-        #self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+        #self.current_animation = self.animation_controller[self.movement][self.direction_animation]
         try:
-            self.current_animation = self.animation_controller.animations_dict[self.movement][self.direction_animation]
+            self.current_animation = self.animation_controller[self.movement][self.direction_animation]
             self.current_animation
             if self.action == "none":
                 self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
