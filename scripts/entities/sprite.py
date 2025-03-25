@@ -60,7 +60,7 @@ class sprite():
     def run(self, event_loop, delta_time):
 
         self.surface.fill(self.fill_color_1)
-        self.custom_blit()
+        self.surface.blit(self.surface_image, (self.surface_image_position[0], self.surface_image_position[1]))
         for occlusion in self.occlusion_rects:
             occlusion[1].fill(self.fill_color_2)
             self.surface.blit(occlusion[1], occlusion[0])
@@ -68,7 +68,7 @@ class sprite():
 
     def update(self):
         self.surface.fill(self.fill_color_1)
-        self.custom_blit()
+        self.surface.blit(self.surface_image, (self.surface_image_position[0], self.surface_image_position[1]))
         for occlusion in self.occlusion_rects:
             occlusion[1].fill(self.fill_color_2)
             self.surface.blit(occlusion[1], occlusion[0])

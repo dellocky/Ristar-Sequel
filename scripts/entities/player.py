@@ -1,4 +1,5 @@
 import pygame
+from scripts.library.functions.debug import debug
 from scripts.entities.physics_sprite import physics_sprite
 from scripts.entities.projectiles.grab_arms import grab_arms
 from scripts.library.classes.animation_controller import animation_controller
@@ -83,13 +84,17 @@ class player(physics_sprite):
 
             elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
                 self.current_velocity[0] = -self.walk_speed
-                self.direction_movement =  'left'
+                self.direction_movement = 'left'
+                if not self.grab_arms:
+                    self.direction_action = "left"
                 self.reset_delay_timer = 0
                 self.idle_delay_timer = 0
     
             elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 self.current_velocity[0] = self.walk_speed
                 self.direction_movement = 'right'
+                if not self.grab_arms:
+                    self.direction_action = "right"
                 self.reset_delay_timer = 0
                 self.idle_delay_timer = 0
 
@@ -231,8 +236,8 @@ class player(physics_sprite):
         self.custom_blit()
 
         if self.grab_arms:
-            self.grab_arms.update_pos(self.pos)
             self.grab_arms.run(delta_time)
+            self.grab_arms.update_pos(self.pos)
             if self.grab_arms.destroy == True:
                 for group in self.grab_arms_groups:
                     self.kill_grab_arms()

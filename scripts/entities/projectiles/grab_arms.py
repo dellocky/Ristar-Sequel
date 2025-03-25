@@ -4,7 +4,7 @@ from scripts.entities.sprite import sprite
 
 class grab_arms():
     # Direction configurations
-    speed = 100
+    speed = 200
     DIRECTION_CONFIG = {
         "left": {
             "image_paths": {
@@ -23,7 +23,7 @@ class grab_arms():
                 "back": "assets/pictures/projectiles/arms/back/right/0.png"
             },
             "buffers": {"left": 0, "right": 45, "up": 0, "down": 0},
-            "pos_offset": [-24, 16],
+            "pos_offset": [-36, 19],
             "speed": [speed, 0],
             "arm_stagger": [-3, 6],
             "occlusion_offset": [-2, 0]
@@ -115,6 +115,12 @@ class grab_arms():
         self.pos_offset = config["pos_offset"]
         self.speed = config["speed"]
         self.arm_stagger = config["arm_stagger"]
+
+        self.reverse = False
+        self.destroy = False
+        self.duration = 0.22
+        self.duration_timer = 0
+
         
         self.occlusion_width = 48
         self.occlusion_height = 40
@@ -152,8 +158,6 @@ class grab_arms():
             buffer_downright=[self.buffer_right, self.buffer_down],
             anchor="bottom_right"
         )
-        self.front_arms.visible = False
-        self.back_arms.visible = False
         
         
         # Set occlusion position based on direction (using addition)
@@ -176,11 +180,6 @@ class grab_arms():
         # Initialize state
         self.front_arms.update()
         self.back_arms.update()
-        self.reverse = False
-        self.destroy = False
-        self.duration = 0.3
-        self.duration_timer = 0
-
     def run(self, delta_time):
 
         if self.reverse == False and self.destroy == False:
