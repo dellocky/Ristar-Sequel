@@ -5,7 +5,6 @@ class animation_player:
         self.animation_time = 0
         self.folder_index = 0
         self.current_image = self.folder_map[self.folder_index][0]
-        print(len(folder_map))
         self.animation_change = True
         self.looping = looping
         self.auto_play = auto_play

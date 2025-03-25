@@ -2,6 +2,7 @@ import pygame
 from scripts.entities.physics_sprite import physics_sprite
 from scripts.entities.projectiles.grab_arms import grab_arms
 from scripts.library.classes.animation_controller import animation_controller
+from scripts.library.functions.logic import get_direction
 
 
 class player(physics_sprite):
@@ -55,6 +56,15 @@ class player(physics_sprite):
         self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_ground/upright", "grabbing_ground", "upright", 0, auto_play=False)
         self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_ground/upupleft", "grabbing_ground", "upupleft", 0, auto_play=False)
         self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_ground/upupright", "grabbing_ground", "upupright", 0, auto_play=False)
+
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/left", "grabbing_air", "left", 0, auto_play=False)            
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/right", "grabbing_air", "right", 0, auto_play=False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/upleft", "grabbing_air", "upleft", 0, auto_play=False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/upright", "grabbing_air", "upright", 0, auto_play=False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/upupleft", "grabbing_air", "upupleft", 0, auto_play=False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/upupright", "grabbing_air", "upupright", 0, auto_play=False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/downleft", "grabbing_air", "downleft", 0, auto_play=False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/downright", "grabbing_air", "downright", 0, auto_play=False)
         
 
         super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller["walking"]["left"].current_image, buffer = [0, 9])
@@ -73,14 +83,12 @@ class player(physics_sprite):
 
             elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
                 self.current_velocity[0] = -self.walk_speed
-                self.direction_action = 'left'
                 self.direction_movement =  'left'
                 self.reset_delay_timer = 0
                 self.idle_delay_timer = 0
     
             elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 self.current_velocity[0] = self.walk_speed
-                self.direction_action = 'right'
                 self.direction_movement = 'right'
                 self.reset_delay_timer = 0
                 self.idle_delay_timer = 0
@@ -111,9 +119,14 @@ class player(physics_sprite):
         #Touching the Ground
         elif self.collide_ground and (self.movement == "falling" or self.movement == "jumping"):
             self.falling_delay_timer = 0
-            if not self.movement_options["grab"]:
+            if self.grab_arms:
+                if self.direction_action != "downleft" and self.direction_action != "downright":
                     self.movement_options["move"] = False
+                    self.action = "grabbing_ground"
                     self.current_velocity[0] = 0
+                else:
+                    self.kill_grab_arms()
+                
 
             elif self.current_velocity[0] != 0:
                 self.movement = "walking"
@@ -152,7 +165,7 @@ class player(physics_sprite):
         if keys[pygame.K_e]:
             for event in event_loop:
                 if event.type == pygame.KEYDOWN and event.key == 101 and self.movement_options['grab']:
-                    grab_direction = self.get_direction(keys)
+                    grab_direction = get_direction(keys)
                     if grab_direction:
                         if self.collide_ground:
                             if grab_direction == "downright":
@@ -161,19 +174,27 @@ class player(physics_sprite):
                                 grab_direction = "left"
                             elif grab_direction == "down":
                                 grab_direction = self.direction_action
-                                
                         self.direction_action = grab_direction
                     
-
                     self.grab_arms = grab_arms(self.pos, self.direction_action, self.grab_arms_groups)
-                    #animation handling for upward grab based off direction player is facing
+                    #animation handling for grab based off direction player is facing 
+                    
                     if self.direction_action == "up":
                         if self.direction_movement =="left":
                             self.direction_action = "upupleft"
                         if self.direction_movement =="right":
                             self.direction_action = "upupright"
-                    
-                    self.action = "grabbing_ground"
+
+                    if self.direction_action == "down":
+                        if self.direction_movement =="left":
+                            self.direction_action = "downleft"
+                        if self.direction_movement =="right":
+                            self.direction_action = "downright"
+
+                    if self.collide_ground:
+                        self.action = "grabbing_ground"
+                    else:
+                        self.action = "grabbing_air"
                     self.animate_action()
                             
                     self.movement_options['grab'] = False
@@ -185,29 +206,6 @@ class player(physics_sprite):
                     if self.direction_action == "left" or self.direction_action == "upleft" or self.direction_action == "upupleft":
                         self.anchor = "bottom_right"
                     break
-         
-    def get_direction(self, keys):
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            if keys[pygame.K_UP] or keys[pygame.K_w]:
-                return "upleft"
-            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-                return "downleft"
-            else:
-                return "left"
-            
-        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            if keys[pygame.K_UP] or keys[pygame.K_w]:
-                return "upright"
-            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-                return "downright"
-            else:
-                return "right"
-        elif keys[pygame.K_UP] or keys[pygame.K_w]:
-            return "up"
-        elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            return "down"
-        
-        else: return False
 
     def kill_grab_arms(self):
         for group in self.grab_arms_groups:
@@ -229,7 +227,7 @@ class player(physics_sprite):
 
         self.input(event_loop, delta_time)
         self.move(self.current_velocity, delta_time)
-        self.surface.fill((0, 0, 2))
+        self.surface.fill((0, 0, 1))
         self.custom_blit()
 
         if self.grab_arms:
