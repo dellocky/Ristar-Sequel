@@ -1,11 +1,10 @@
 from scripts.library.objects.settings import settings
 from scripts.library.classes.occlusion import occlusion
-#from scripts.layers import mask_layer
 import scripts.library.classes.animation_player as animation_player
 import pygame
 
 class sprite():
-    def __init__(self, name, pos, groups,  hitbox_rect_pos, hitbox_rect_size, surface_image, buffer_leftup = [0, 0], buffer_downright = [0, 0]):      
+    def __init__(self, name, pos, groups,  hitbox_rect_pos, hitbox_rect_size, surface_image, buffer_leftup = [0, 0], buffer_downright = [0, 0], anchor = "bottom_left"):      
     
         self.name = name
         self.groups = groups
@@ -30,6 +29,7 @@ class sprite():
         self.colorkey = (0, 0, 1)
         self.fill_color_1 = self.colorkey
         self.fill_color_2 = self.colorkey
+        self.anchor = anchor
 
         #self.mask = pygame.mask.from_surface(self.surface)
 
@@ -38,7 +38,9 @@ class sprite():
         #Debugging Tools<----------------------------------------------------------------> 
         #self.fill_color_1 = (20, 20, 20)
         #self.fill_color_2 = (20, 20, 255)
+        self.visible = True
         self.draw_hitbox_rect = False
+        
         for I in groups:
             I.append(self)
         
@@ -58,7 +60,7 @@ class sprite():
     def run(self, event_loop, delta_time):
 
         self.surface.fill(self.fill_color_1)
-        self.surface.blit(self.surface_image, (self.width_difference + self.surface_image_position[0], (self.height_difference) + self.surface_image_position[1]))
+        self.custom_blit()
         for occlusion in self.occlusion_rects:
             occlusion[1].fill(self.fill_color_2)
             self.surface.blit(occlusion[1], occlusion[0])
@@ -66,10 +68,25 @@ class sprite():
 
     def update(self):
         self.surface.fill(self.fill_color_1)
-        self.surface.blit(self.surface_image, (self.width_difference + self.surface_image_position[0], (self.height_difference) + self.surface_image_position[1]))
+        self.custom_blit()
         for occlusion in self.occlusion_rects:
             occlusion[1].fill(self.fill_color_2)
             self.surface.blit(occlusion[1], occlusion[0])
-
     
+    def custom_blit(self):
+        if self.anchor == "top_left":
+            self.surface.blit(self.surface_image, (0, 0))
+        if self.anchor == "top_right":
+            self.surface.blit(self.surface_image, (-self.width_difference, 0))
+        if self.anchor == "bottom_left":
+            self.surface.blit(self.surface_image, (0, -self.height_difference))
+        if self.anchor == "bottom_right":
+            self.surface.blit(self.surface_image, (-self.width_difference, -self.height_difference))
+
+
+    def animate_movement(self):
+        self.current_animation = self.animation_controller[self.movement][self.direction_movement]
+        
+    def animate_action(self):
+        self.current_animation = self.animation_controller[self.action][self.direction_action]
     

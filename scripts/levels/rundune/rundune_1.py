@@ -60,5 +60,5 @@ class rundune_1:
         self.entity_sprites.run('run', event_list, delta_time)
         self.entity_sprites.run('fall', delta_time)
         self.draw(display)
-        #debug(display, self.player.current_animation.folder_index)
+        debug(display, self.player.height_difference)
  

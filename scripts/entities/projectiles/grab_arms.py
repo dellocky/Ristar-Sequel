@@ -137,7 +137,8 @@ class grab_arms():
             [5, 5], 
             arm_image_front,
             buffer_leftup=[self.buffer_left, self.buffer_up],
-            buffer_downright=[self.buffer_right, self.buffer_down]
+            buffer_downright=[self.buffer_right, self.buffer_down],
+            anchor="bottom_right"
         )
         
         self.back_arms = sprite(
@@ -148,8 +149,12 @@ class grab_arms():
             [5, 5], 
             arm_image_back,
             buffer_leftup=[self.buffer_left, self.buffer_up],
-            buffer_downright=[self.buffer_right, self.buffer_down]
+            buffer_downright=[self.buffer_right, self.buffer_down],
+            anchor="bottom_right"
         )
+        self.front_arms.visible = False
+        self.back_arms.visible = False
+        
         
         # Set occlusion position based on direction (using addition)
         self.occlusion_pos = config["occlusion_offset"]

@@ -1,11 +1,12 @@
 import scripts.library.functions.asset_import as asset_import
 from scripts.library.classes.animation_player import animation_player
-from os import walk
+
 
 class animation_controller(dict):
-    def __init__(self, path):
+    def __init__(self):
         super().__init__()
-        path
+  
+        
 
     
     def create_actions(self, *args):
@@ -24,7 +25,9 @@ class animation_controller(dict):
             if  animation.animation_change == True:
                 surface_image = animation.current_image
                 animation.animation_change = False
-            return surface_image
+        else:
+            surface_image = animation.current_image
+        return surface_image
 
     def reset_animations(self):
         for animations in self.values():
