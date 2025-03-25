@@ -12,7 +12,7 @@ class player(physics_sprite):
         self.grab_arms_groups = grab_arms_groups
         self.direction_animation = 'right'
         self.movement = 'idle'
-        self.action = 'none'
+        self.action = False
         
         self.walk_speed = 130
         self.current_velocity = [0, 0]
@@ -37,8 +37,8 @@ class player(physics_sprite):
             "jump" : True
         }
 
-        self.animation_controller = animation_controller()
-        self.animation_controller.create_actions("walking", "idle", "jumping", "falling")
+        self.animation_controller = animation_controller("assets/pictures/characters/player")
+        self.animation_controller.create_actions("walking", "idle", "jumping", "falling" , "grabbing", "grabbing_air")
         self.animation_controller.create_animation("assets/pictures/characters/player/walking/left", "walking", "left", time_walk)
         self.animation_controller.create_animation("assets/pictures/characters/player/walking/right", "walking", "right", time_walk)    
         self.animation_controller.create_animation("assets/pictures/characters/player/idle/left", "idle", "left", time_walk)            
@@ -47,6 +47,7 @@ class player(physics_sprite):
         self.animation_controller.create_animation("assets/pictures/characters/player/jumping/right", "jumping", "right", time_jump, looping = False)
         self.animation_controller.create_animation("assets/pictures/characters/player/falling/left", "falling", "left", time_jump, looping = False)
         self.animation_controller.create_animation("assets/pictures/characters/player/falling/right", "falling", "right", time_jump, looping = False)
+        
 
         super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller["walking"]["left"].current_image, buffer = [0, 9])
 
@@ -184,6 +185,18 @@ class player(physics_sprite):
         
         else: return "none"
 
+    def kill_grab_arms(self):
+        for group in self.grab_arms_groups:
+                if len(group) > 0:
+                    group.pop(0)
+                self.grab_arms = False
+                self.movement = "idle"
+                self.direction_animation = "left"
+                self.movement_options['grab'] = True
+                self.movement_options['move'] = True
+                self.movement_options['jump'] = True
+                self.animation_controller.reset_animations()
+
 
     def run(self, event_loop, delta_time):
 
@@ -197,25 +210,16 @@ class player(physics_sprite):
             self.grab_arms.run(delta_time)
             if self.grab_arms.destroy == True:
                 for group in self.grab_arms_groups:
-                    if len(group) > 0:
-                        group.pop(0)
-                self.grab_arms = False
-                self.movement = "idle"
-                self.movement_options['grab'] = True
-                self.movement_options['move'] = True
-                self.movement_options['jump'] = True
-                self.animation_controller.reset_animations()
+                    self.kill_grab_arms()
     
         #self.current_animation = self.animation_controller[self.movement][self.direction_animation]
         try:
-            self.current_animation = self.animation_controller[self.movement][self.direction_animation]
-            self.current_animation
-            if self.action == "none":
-                self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
-                self.update_image_offset()
+            if self.action:
+                self.current_animation = self.animation_controller[self.action][self.direction_animation]
             else:
-                self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
-                self.update_image_offset()
+                self.current_animation = self.animation_controller[self.movement][self.direction_animation]
+            self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
+            self.update_image_offset()
         except:
             pass
  

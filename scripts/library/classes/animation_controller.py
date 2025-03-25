@@ -1,9 +1,12 @@
 import scripts.library.functions.asset_import as asset_import
 from scripts.library.classes.animation_player import animation_player
+from os import walk
 
 class animation_controller(dict):
-    def __init__(self):
+    def __init__(self, path):
         super().__init__()
+        path
+
     
     def create_actions(self, *args):
         for arg in args:

@@ -28,6 +28,28 @@ class grab_arms():
             "arm_stagger": [-3, 6],
             "occlusion_offset": [-2, 0]
         },
+        "up": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/left/0.png",
+                "back": "assets/pictures/projectiles/arms/back/left/0.png"
+            },
+            "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
+            "pos_offset": [-52, 16],
+            "speed": [-speed, 0],
+            "arm_stagger": [4, 6],
+            "occlusion_offset": [82, 0] 
+        },
+        "down": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/right/0.png",
+                "back": "assets/pictures/projectiles/arms/back/right/0.png"
+            },
+            "buffers": {"left": 0, "right": 45, "up": 0, "down": 0},
+            "pos_offset": [-24, 16],
+            "speed": [speed, 0],
+            "arm_stagger": [-3, 6],
+            "occlusion_offset": [-2, 0]
+        },
         "upright": {
             "image_paths": {
                 "front": "assets/pictures/projectiles/arms/front/upright/0.png",
@@ -49,7 +71,31 @@ class grab_arms():
             "speed": [-speed/sqrt(2), -speed/sqrt(2)],
             "arm_stagger": [5, 5],
             "occlusion_offset": [0, 67]
+        },
+        "downright": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/upright/0.png",
+                "back": "assets/pictures/projectiles/arms/back/upright/0.png"
+            },
+            "buffers": {"left": 0, "right": 30, "up": 30, "down": 0},
+            "pos_offset": [0, -43],
+            "speed": [speed/sqrt(2), -speed/sqrt(2)],
+            "arm_stagger": [-5, 5],
+            "occlusion_offset": [0, 67]
+        },
+        "downleft": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/upleft/0.png",
+                "back": "assets/pictures/projectiles/arms/back/upleft/0.png"
+            },
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "pos_offset": [-36, -43],
+            "speed": [-speed/sqrt(2), -speed/sqrt(2)],
+            "arm_stagger": [5, 5],
+            "occlusion_offset": [0, 67]
         }
+
+        
     }
 
     def __init__(self, pos, direction, groups):
