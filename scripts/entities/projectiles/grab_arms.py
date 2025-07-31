@@ -6,13 +6,14 @@ class grab_arms():
     # Direction configurations
     speed = 200
     DIRECTION_CONFIG = {
+        "ground":{
         "left": {
             "image_paths": {
                 "front": "assets/pictures/projectiles/arms/front/left/0.png",
                 "back": "assets/pictures/projectiles/arms/back/left/0.png"
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
-            "pos_offset": [-62, 19],
+            "pos_offset": [-63, 19],
             "speed": [speed, 0],
             "arm_stagger": [4, 6],
             "occlusion_size": [48, 40],
@@ -103,16 +104,113 @@ class grab_arms():
             "occlusion_size": [46, 40],
             "anchor": "bottom_right" 
         }
-
-        
+    },
+        "air":{
+        "left": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/left/0.png",
+                "back": "assets/pictures/projectiles/arms/back/left/0.png"
+            },
+            "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
+            "pos_offset": [-61, 10],
+            "speed": [speed, 0],
+            "arm_stagger": [4, 6],
+            "occlusion_size": [48, 40],
+            "anchor": "bottom_right"
+     
+        },
+        "right": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/right/0.png",
+                "back": "assets/pictures/projectiles/arms/back/right/0.png"
+            },
+            "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
+            "pos_offset": [-20, 10],
+            "speed": [speed, 0],
+            "arm_stagger": [-3, 6],
+            "occlusion_size": [48, 40],
+            "anchor": "bottom_left"
+        },
+        "up": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/left/0.png",
+                "back": "assets/pictures/projectiles/arms/back/left/0.png"
+            },
+            "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
+            "pos_offset": [-52, 16],
+            "speed": [-speed, 0],
+            "arm_stagger": [4, 6],
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
+        },
+        "down": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/right/0.png",
+                "back": "assets/pictures/projectiles/arms/back/right/0.png"
+            },
+            "buffers": {"left": 30, "right": 0, "up": 0, "down": 0},
+            "pos_offset": [-24, 16],
+            "speed": [speed, 0],
+            "arm_stagger": [-3, 6],
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
+        },
+        "upright": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/upright/0.png",
+                "back": "assets/pictures/projectiles/arms/back/upright/0.png"
+            },
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "pos_offset": [-6, -22],
+            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
+            "arm_stagger": [-5, 5],
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
+        },
+        "upleft": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/upleft/0.png",
+                "back": "assets/pictures/projectiles/arms/back/upleft/0.png"
+            },
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "pos_offset": [-31, -22],
+            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
+            "arm_stagger": [5, 5],
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_right" 
+        },
+        "downright": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/upright/0.png",
+                "back": "assets/pictures/projectiles/arms/back/upright/0.png"
+            },
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "pos_offset": [0, -43],
+            "speed": [speed/sqrt(2), -speed/sqrt(2)],
+            "arm_stagger": [-5, 5],
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
+        },
+        "downleft": {
+            "image_paths": {
+                "front": "assets/pictures/projectiles/arms/front/upleft/0.png",
+                "back": "assets/pictures/projectiles/arms/back/upleft/0.png"
+            },
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "pos_offset": [-36, -43],
+            "speed": [-speed/sqrt(2), -speed/sqrt(2)],
+            "arm_stagger": [5, 5],
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_right" 
+        }   
+    }
     }
 
-    def __init__(self, pos, direction, groups):
-        print(direction)
-        if direction not in self.DIRECTION_CONFIG:
+    def __init__(self, pos, state, direction, groups):
+        if direction not in self.DIRECTION_CONFIG[state]:
             raise ValueError(f"Invalid direction: {direction}")
             
-        config = self.DIRECTION_CONFIG[direction]
+        config = self.DIRECTION_CONFIG[state][direction]
 
         arm_image_front = pygame.image.load(config["image_paths"]["front"]).convert_alpha()
         arm_image_back = pygame.image.load(config["image_paths"]["back"]).convert_alpha()
@@ -165,17 +263,26 @@ class grab_arms():
             arm_image_back,
             buffer_leftup=[self.buffer_left, self.buffer_up],
             buffer_downright=[self.buffer_right, self.buffer_down],
-            anchor = self.anchor
-        )
-        # Create occlusion rectangles
+            anchor = self.anchor)
+        
+        if self.anchor == "bottom_left":
+            front_occ_x = 0
+            back_occ_x = 0
+        elif self.anchor == "bottom_right":
+            front_occ_x = self.front_arms.surface.get_width() - self.occlusion_width
+            back_occ_x = self.back_arms.surface.get_width() - self.occlusion_width
+        else:
+            front_occ_x = 0
+            back_occ_x = 0
+
         self.front_occlusion = self.front_arms.create_occlusion_rect(
-            0,
+            front_occ_x,
             0,
             self.occlusion_width, 
             self.occlusion_height,
-        )
+        )   
         self.back_occlusion = self.back_arms.create_occlusion_rect(
-            0,
+            back_occ_x,
             0,
             self.occlusion_width, 
             self.occlusion_height,
@@ -222,6 +329,11 @@ class grab_arms():
 
         self.front_arms.pos = [pos[0] + self.arm_stagger[0] + self.pos_offset[0], pos[1] + self.pos_offset[1] + self.arm_stagger[1]]
         self.back_arms.pos = [pos[0] + self.pos_offset[0], pos[1] + self.pos_offset[1]]
+    
+    def update_offset(self, target):
+        self.pos_offset = self.DIRECTION_CONFIG[target][self.direction]["pos_offset"]
+        self.front_arms.update()
+        self.back_arms.update()
         
 
     

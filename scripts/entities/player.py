@@ -17,21 +17,21 @@ class player(physics_sprite):
         self.movement = 'idle'
         self.action = False
         
-        self.walk_speed = 130
+        self.WALK_SPEED = 130
         self.current_velocity = [0, 0]
-        self.jumps_maximum = 1
+        self.JUMPS_MAXIMIUM = 1
         self.jumps_current = 1
 
-        time_walk =.082
-        time_jump = time_walk * 2.4
+        TIME_WALK =.082
+        TIME_JUMP = TIME_WALK * 2.4
         
-        self.reset_delay = time_walk * 4
+        self.RESET_DELAY = TIME_WALK * 4
         self.reset_delay_timer = 0
 
-        self.falling_delay = time_walk 
+        self.falling_delay = TIME_WALK 
         self.falling_delay_timer = 0
     
-        self.idle_delay = .12
+        self.IDLE_DELAY = .12
         self.idle_delay_timer = 0
 
         self.movement_options = {
@@ -42,14 +42,14 @@ class player(physics_sprite):
 
         self.animation_controller = animation_controller()
         self.animation_controller.create_actions("walking", "idle", "jumping", "falling" , "grabbing_ground", "grabbing_air")
-        self.animation_controller.create_animation("assets/pictures/characters/player/walking/left", "walking", "left", time_walk)
-        self.animation_controller.create_animation("assets/pictures/characters/player/walking/right", "walking", "right", time_walk)    
-        self.animation_controller.create_animation("assets/pictures/characters/player/idle/left", "idle", "left", time_walk)            
-        self.animation_controller.create_animation("assets/pictures/characters/player/idle/right", "idle", "right", time_walk)
-        self.animation_controller.create_animation("assets/pictures/characters/player/jumping/left", "jumping", "left", time_jump, looping = False)
-        self.animation_controller.create_animation("assets/pictures/characters/player/jumping/right", "jumping", "right", time_jump, looping = False)
-        self.animation_controller.create_animation("assets/pictures/characters/player/falling/left", "falling", "left", time_jump, looping = False)
-        self.animation_controller.create_animation("assets/pictures/characters/player/falling/right", "falling", "right", time_jump, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/walking/left", "walking", "left", TIME_WALK)
+        self.animation_controller.create_animation("assets/pictures/characters/player/walking/right", "walking", "right", TIME_WALK)    
+        self.animation_controller.create_animation("assets/pictures/characters/player/idle/left", "idle", "left", TIME_WALK)            
+        self.animation_controller.create_animation("assets/pictures/characters/player/idle/right", "idle", "right", TIME_WALK)
+        self.animation_controller.create_animation("assets/pictures/characters/player/jumping/left", "jumping", "left", TIME_JUMP, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/jumping/right", "jumping", "right", TIME_JUMP, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/falling/left", "falling", "left", TIME_JUMP, looping = False)
+        self.animation_controller.create_animation("assets/pictures/characters/player/falling/right", "falling", "right", TIME_JUMP, looping = False)
 
         self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_ground/left", "grabbing_ground", "left", 0, auto_play=False)            
         self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_ground/right", "grabbing_ground", "right", 0, auto_play=False)
@@ -83,7 +83,7 @@ class player(physics_sprite):
                 self.current_velocity[0] = 0
 
             elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-                self.current_velocity[0] = -self.walk_speed
+                self.current_velocity[0] = -self.WALK_SPEED
                 self.direction_movement = 'left'
                 if not self.grab_arms:
                     self.direction_action = "left"
@@ -91,7 +91,7 @@ class player(physics_sprite):
                 self.idle_delay_timer = 0
     
             elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-                self.current_velocity[0] = self.walk_speed
+                self.current_velocity[0] = self.WALK_SPEED
                 self.direction_movement = 'right'
                 if not self.grab_arms:
                     self.direction_action = "right"
@@ -114,11 +114,11 @@ class player(physics_sprite):
         elif self.movement == 'walking' and self.current_velocity[0] == 0: #and self.action == False:
             self.reset_delay_timer += delta_time
             self.idle_delay_timer += delta_time
-            if self.idle_delay_timer >= self.idle_delay:
+            if self.idle_delay_timer >= self.IDLE_DELAY:
                 self.movement = 'idle'
                 self.animate_movement()
                 self.current_animation.change_animation()
-            if self.reset_delay_timer >= self.reset_delay:
+            if self.reset_delay_timer >= self.RESET_DELAY:
                 self.animation_controller.reset_animations()
 
         #Touching the Ground
@@ -128,6 +128,8 @@ class player(physics_sprite):
                 if self.direction_action != "downleft" and self.direction_action != "downright":
                     self.movement_options["move"] = False
                     self.action = "grabbing_ground"
+                    self.grab_arms.update_offset("ground")
+                    self.grab_arms.update_pos(self.pos)
                     self.current_velocity[0] = 0
                 else:
                     self.kill_grab_arms()
@@ -180,8 +182,10 @@ class player(physics_sprite):
                             elif grab_direction == "down":
                                 grab_direction = self.direction_action
                         self.direction_action = grab_direction
-
-                    self.grab_arms = grab_arms(self.pos, self.direction_action, self.grab_arms_groups)
+                    if self.collide_ground:
+                        self.grab_arms = grab_arms(self.pos, "ground", self.direction_action, self.grab_arms_groups)
+                    else:
+                        self.grab_arms = grab_arms(self.pos, "air", self.direction_action, self.grab_arms_groups)
                     #animation handling for grab based off direction player is facing 
                     if self.direction_action == "up":
                         if self.direction_movement =="left":
