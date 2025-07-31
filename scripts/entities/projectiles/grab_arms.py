@@ -12,21 +12,24 @@ class grab_arms():
                 "back": "assets/pictures/projectiles/arms/back/left/0.png"
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
-            "pos_offset": [-52, 16],
-            "speed": [-speed, 0],
+            "pos_offset": [-62, 19],
+            "speed": [speed, 0],
             "arm_stagger": [4, 6],
-            "occlusion_offset": [82, 0] 
+            "occlusion_size": [48, 40],
+            "anchor": "bottom_right"
+     
         },
         "right": {
             "image_paths": {
                 "front": "assets/pictures/projectiles/arms/front/right/0.png",
                 "back": "assets/pictures/projectiles/arms/back/right/0.png"
             },
-            "buffers": {"left": 0, "right": 45, "up": 0, "down": 0},
-            "pos_offset": [-36, 19],
+            "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
+            "pos_offset": [-16, 19],
             "speed": [speed, 0],
             "arm_stagger": [-3, 6],
-            "occlusion_offset": [-2, 0]
+            "occlusion_size": [48, 40],
+            "anchor": "bottom_left"
         },
         "up": {
             "image_paths": {
@@ -37,29 +40,32 @@ class grab_arms():
             "pos_offset": [-52, 16],
             "speed": [-speed, 0],
             "arm_stagger": [4, 6],
-            "occlusion_offset": [82, 0] 
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
         },
         "down": {
             "image_paths": {
                 "front": "assets/pictures/projectiles/arms/front/right/0.png",
                 "back": "assets/pictures/projectiles/arms/back/right/0.png"
             },
-            "buffers": {"left": 0, "right": 45, "up": 0, "down": 0},
+            "buffers": {"left": 30, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-24, 16],
             "speed": [speed, 0],
             "arm_stagger": [-3, 6],
-            "occlusion_offset": [-2, 0]
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
         },
         "upright": {
             "image_paths": {
                 "front": "assets/pictures/projectiles/arms/front/upright/0.png",
                 "back": "assets/pictures/projectiles/arms/back/upright/0.png"
             },
-            "buffers": {"left": 0, "right": 30, "up": 30, "down": 0},
-            "pos_offset": [0, -43],
-            "speed": [speed/sqrt(2), -speed/sqrt(2)],
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "pos_offset": [-6, -22],
+            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
             "arm_stagger": [-5, 5],
-            "occlusion_offset": [0, 67]
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
         },
         "upleft": {
             "image_paths": {
@@ -67,21 +73,23 @@ class grab_arms():
                 "back": "assets/pictures/projectiles/arms/back/upleft/0.png"
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
-            "pos_offset": [-36, -43],
-            "speed": [-speed/sqrt(2), -speed/sqrt(2)],
+            "pos_offset": [-31, -22],
+            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
             "arm_stagger": [5, 5],
-            "occlusion_offset": [0, 67]
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_right" 
         },
         "downright": {
             "image_paths": {
                 "front": "assets/pictures/projectiles/arms/front/upright/0.png",
                 "back": "assets/pictures/projectiles/arms/back/upright/0.png"
             },
-            "buffers": {"left": 0, "right": 30, "up": 30, "down": 0},
+            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
             "pos_offset": [0, -43],
             "speed": [speed/sqrt(2), -speed/sqrt(2)],
             "arm_stagger": [-5, 5],
-            "occlusion_offset": [0, 67]
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_left" 
         },
         "downleft": {
             "image_paths": {
@@ -92,13 +100,15 @@ class grab_arms():
             "pos_offset": [-36, -43],
             "speed": [-speed/sqrt(2), -speed/sqrt(2)],
             "arm_stagger": [5, 5],
-            "occlusion_offset": [0, 67]
+            "occlusion_size": [46, 40],
+            "anchor": "bottom_right" 
         }
 
         
     }
 
     def __init__(self, pos, direction, groups):
+        print(direction)
         if direction not in self.DIRECTION_CONFIG:
             raise ValueError(f"Invalid direction: {direction}")
             
@@ -115,16 +125,15 @@ class grab_arms():
         self.pos_offset = config["pos_offset"]
         self.speed = config["speed"]
         self.arm_stagger = config["arm_stagger"]
+        self.anchor = config["anchor"]
+        self.occlusion_width = config["occlusion_size"][0]
+        self.occlusion_height = config["occlusion_size"][1]
 
         self.reverse = False
         self.destroy = False
         self.duration = 0.22
         self.duration_timer = 0
 
-        
-        self.occlusion_width = 48
-        self.occlusion_height = 40
-        self.occlusion_pos = [0, 0]
         
         self.action = "init"
         front, back = groups[0], groups[1]
@@ -144,7 +153,7 @@ class grab_arms():
             arm_image_front,
             buffer_leftup=[self.buffer_left, self.buffer_up],
             buffer_downright=[self.buffer_right, self.buffer_down],
-            anchor="bottom_right"
+            anchor = self.anchor
         )
         
         self.back_arms = sprite(
@@ -156,31 +165,31 @@ class grab_arms():
             arm_image_back,
             buffer_leftup=[self.buffer_left, self.buffer_up],
             buffer_downright=[self.buffer_right, self.buffer_down],
-            anchor="bottom_right"
+            anchor = self.anchor
         )
-        
-        
-        # Set occlusion position based on direction (using addition)
-        self.occlusion_pos = config["occlusion_offset"]
-
         # Create occlusion rectangles
         self.front_occlusion = self.front_arms.create_occlusion_rect(
-            self.occlusion_pos[0], 
-            self.occlusion_pos[1], 
+            0,
+            0,
             self.occlusion_width, 
-            self.occlusion_height
+            self.occlusion_height,
         )
         self.back_occlusion = self.back_arms.create_occlusion_rect(
-            self.occlusion_pos[0], 
-            self.occlusion_pos[1], 
+            0,
+            0,
             self.occlusion_width, 
-            self.occlusion_height
+            self.occlusion_height,
         )
-        
+        #self.front_arms.visible = False
+        #self.back_arms.visible = False
         # Initialize state
+        self.front_arms.update_difference()
+        self.back_arms.update_difference()
         self.front_arms.update()
         self.back_arms.update()
+
     def run(self, delta_time):
+        
 
         if self.reverse == False and self.destroy == False:
             frame_movement = [self.speed[0] * delta_time, self.speed[1] * delta_time]
@@ -190,21 +199,21 @@ class grab_arms():
                 self.reverse = True
                 self.occlusions_cleared = True
             else:
-                self.front_arms.surface_image_position[0] += frame_movement[0]
-                self.back_arms.surface_image_position[0] += frame_movement[0]
-                self.front_arms.surface_image_position[1] += frame_movement[1]
-                self.back_arms.surface_image_position[1] += frame_movement[1]
+                self.front_arms.image_offset[0] += frame_movement[0]
+                self.back_arms.image_offset[0] += frame_movement[0]
+                self.front_arms.image_offset[1] += frame_movement[1]
+                self.back_arms.image_offset[1] += frame_movement[1]
 
         elif self.reverse == True and self.destroy == False:
-            frame_movement = [-1 * self.speed[0] * delta_time, -1 * self.speed[1] * delta_time]
+            frame_movement = [-1 * self.speed[0] * delta_time, -1 * self.speed[1] * delta_time] 
             self.duration_timer += delta_time
             if self.duration_timer >= self.duration:
                 self.destroy = True
             else:
-                self.front_arms.surface_image_position[0] += frame_movement[0]
-                self.back_arms.surface_image_position[0] += frame_movement[0]
-                self.front_arms.surface_image_position[1] += frame_movement[1]
-                self.back_arms.surface_image_position[1] += frame_movement[1]
+                self.front_arms.image_offset[0] += frame_movement[0]
+                self.back_arms.image_offset[0] += frame_movement[0]
+                self.front_arms.image_offset[1] += frame_movement[1]
+                self.back_arms.image_offset[1] += frame_movement[1]
 
         self.front_arms.update()
         self.back_arms.update()
@@ -221,17 +230,3 @@ class grab_arms():
  
             
              
-
-                
-                
-                
-         
-                
-
-
-
-
-
-                
-
-                 

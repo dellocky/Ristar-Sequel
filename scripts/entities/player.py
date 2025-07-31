@@ -68,7 +68,7 @@ class player(physics_sprite):
         self.animation_controller.create_animation("assets/pictures/characters/player/grabbing_air/downright", "grabbing_air", "downright", 0, auto_play=False)
         
 
-        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller["walking"]["left"].current_image, buffer = [0, 9])
+        super().__init__("Player", pos, self_groups, [pos[0] - 16, pos[1] - 15], [16, 30], self.animation_controller["walking"]["left"].current_image, buffer_leftup = [6, 9], buffer_downright = [0, 0])
 
         self.animate_movement()
         #self.draw_hitbox_rect = True
@@ -180,10 +180,9 @@ class player(physics_sprite):
                             elif grab_direction == "down":
                                 grab_direction = self.direction_action
                         self.direction_action = grab_direction
-                    
+
                     self.grab_arms = grab_arms(self.pos, self.direction_action, self.grab_arms_groups)
                     #animation handling for grab based off direction player is facing 
-                    
                     if self.direction_action == "up":
                         if self.direction_movement =="left":
                             self.direction_action = "upupleft"
@@ -200,7 +199,10 @@ class player(physics_sprite):
                         self.action = "grabbing_ground"
                     else:
                         self.action = "grabbing_air"
+                    
                     self.animate_action()
+                    self.image_offset[0] = 20
+
                             
                     self.movement_options['grab'] = False
                     self.movement_options['jump'] = False
@@ -210,20 +212,23 @@ class player(physics_sprite):
 
                     if self.direction_action == "left" or self.direction_action == "upleft" or self.direction_action == "upupleft":
                         self.anchor = "bottom_right"
+                    self.surface_image = self.animation_controller.animate(self.current_animation, 0)
+                    self.update_difference()
                     break
 
     def kill_grab_arms(self):
         for group in self.grab_arms_groups:
                 if len(group) > 0:
                     group.pop(0)
+                self.action = False
                 self.grab_arms = False
                 self.movement = "idle"
                 self.movement_options['grab'] = True
                 self.movement_options['move'] = True
                 self.movement_options['jump'] = True
+                self.image_offset[0] = 0
                 self.animation_controller.reset_animations()
                 self.direction_action = self.direction_movement
-                self.action = False
                 self.anchor = "bottom_left"
 
 
@@ -249,7 +254,7 @@ class player(physics_sprite):
             else:
                 self.animate_movement()
             self.surface_image = self.animation_controller.animate(self.current_animation, delta_time)
-            self.update_image_offset()
+            self.update_difference()
         except:
             pass
  

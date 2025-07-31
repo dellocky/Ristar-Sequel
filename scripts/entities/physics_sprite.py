@@ -5,12 +5,8 @@ import scripts.library.functions.logic as logic
 
 
 class physics_sprite(sprite):
-    def __init__(self, name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer = [0, 0]) -> None:
-        # Convert single buffer value to proper buffer format for sprite class
-        buffer_leftup = [0, buffer[1]] if isinstance(buffer, list) else [0, buffer]
-        buffer_downright = [0, 0]  # We keep this as 0 since we only need upward buffer
+    def __init__(self, name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer_leftup = None, buffer_downright = None):
         super().__init__(name, pos, groups, hitbox_rect_pos, hitbox_rect_size, surface_image, buffer_leftup=buffer_leftup, buffer_downright=buffer_downright)
-        self.buffer = buffer_leftup  # Store buffer for use in animation
         self.collide_ground = False
 
     def fall(self, delta_time):
