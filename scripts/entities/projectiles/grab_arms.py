@@ -4,7 +4,7 @@ from scripts.entities.sprite import sprite
 
 class grab_arms():
     # Direction configurations
-    speed = 200
+    BASE_SPEED = 150
     DIRECTION_CONFIG = {
         "ground":{
         "left": {
@@ -14,7 +14,7 @@ class grab_arms():
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-63, 19],
-            "speed": [speed, 0],
+            "speed": [BASE_SPEED, 0],
             "arm_stagger": [4, 6],
             "occlusion_size": [48, 40],
             "anchor": "bottom_right"
@@ -27,7 +27,7 @@ class grab_arms():
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-16, 19],
-            "speed": [speed, 0],
+            "speed": [BASE_SPEED, 0],
             "arm_stagger": [-3, 6],
             "occlusion_size": [48, 40],
             "anchor": "bottom_left"
@@ -39,7 +39,7 @@ class grab_arms():
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-52, 16],
-            "speed": [-speed, 0],
+            "speed": [-BASE_SPEED, 0],
             "arm_stagger": [4, 6],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -51,7 +51,7 @@ class grab_arms():
             },
             "buffers": {"left": 30, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-24, 16],
-            "speed": [speed, 0],
+            "speed": [BASE_SPEED, 0],
             "arm_stagger": [-3, 6],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -61,9 +61,9 @@ class grab_arms():
                 "front": "assets/pictures/projectiles/arms/front/upright/0.png",
                 "back": "assets/pictures/projectiles/arms/back/upright/0.png"
             },
-            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "buffers": {"left": 31, "right": 0, "up": 31, "down": 0},
             "pos_offset": [-6, -22],
-            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
+            "speed": [round(BASE_SPEED/sqrt(2)), round(BASE_SPEED/sqrt(2))],
             "arm_stagger": [-5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -73,9 +73,9 @@ class grab_arms():
                 "front": "assets/pictures/projectiles/arms/front/upleft/0.png",
                 "back": "assets/pictures/projectiles/arms/back/upleft/0.png"
             },
-            "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
+            "buffers": {"left": 31, "right": 0, "up": 31, "down": 0},
             "pos_offset": [-31, -22],
-            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
+            "speed": [round(BASE_SPEED/sqrt(2)), round(BASE_SPEED/sqrt(2))],
             "arm_stagger": [5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_right" 
@@ -87,7 +87,7 @@ class grab_arms():
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
             "pos_offset": [0, -43],
-            "speed": [speed/sqrt(2), -speed/sqrt(2)],
+            "speed": [BASE_SPEED/sqrt(2), -BASE_SPEED/sqrt(2)],
             "arm_stagger": [-5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -99,7 +99,7 @@ class grab_arms():
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
             "pos_offset": [-36, -43],
-            "speed": [-speed/sqrt(2), -speed/sqrt(2)],
+            "speed": [-BASE_SPEED/sqrt(2), -BASE_SPEED/sqrt(2)],
             "arm_stagger": [5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_right" 
@@ -113,7 +113,7 @@ class grab_arms():
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-61, 10],
-            "speed": [speed, 0],
+            "speed": [BASE_SPEED, 0],
             "arm_stagger": [4, 6],
             "occlusion_size": [48, 40],
             "anchor": "bottom_right"
@@ -126,7 +126,7 @@ class grab_arms():
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-20, 10],
-            "speed": [speed, 0],
+            "speed": [BASE_SPEED, 0],
             "arm_stagger": [-3, 6],
             "occlusion_size": [48, 40],
             "anchor": "bottom_left"
@@ -138,7 +138,7 @@ class grab_arms():
             },
             "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-52, 16],
-            "speed": [-speed, 0],
+            "speed": [-BASE_SPEED, 0],
             "arm_stagger": [4, 6],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -150,7 +150,7 @@ class grab_arms():
             },
             "buffers": {"left": 30, "right": 0, "up": 0, "down": 0},
             "pos_offset": [-24, 16],
-            "speed": [speed, 0],
+            "speed": [BASE_SPEED, 0],
             "arm_stagger": [-3, 6],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -161,8 +161,8 @@ class grab_arms():
                 "back": "assets/pictures/projectiles/arms/back/upright/0.png"
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
-            "pos_offset": [-6, -22],
-            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
+            "pos_offset": [-6, -28],
+            "speed": [round(BASE_SPEED/sqrt(2)), round(BASE_SPEED/sqrt(2))],
             "arm_stagger": [-5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -173,8 +173,8 @@ class grab_arms():
                 "back": "assets/pictures/projectiles/arms/back/upleft/0.png"
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
-            "pos_offset": [-31, -22],
-            "speed": [round(speed/sqrt(2)), round(speed/sqrt(2))],
+            "pos_offset": [-31, -28],
+            "speed": [round(BASE_SPEED/sqrt(2)), round(BASE_SPEED/sqrt(2))],
             "arm_stagger": [5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_right" 
@@ -186,7 +186,7 @@ class grab_arms():
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
             "pos_offset": [0, -43],
-            "speed": [speed/sqrt(2), -speed/sqrt(2)],
+            "speed": [BASE_SPEED/sqrt(2), -BASE_SPEED/sqrt(2)],
             "arm_stagger": [-5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -198,7 +198,7 @@ class grab_arms():
             },
             "buffers": {"left": 30, "right": 0, "up": 30, "down": 0},
             "pos_offset": [-36, -43],
-            "speed": [-speed/sqrt(2), -speed/sqrt(2)],
+            "speed": [-BASE_SPEED/sqrt(2), -BASE_SPEED/sqrt(2)],
             "arm_stagger": [5, 5],
             "occlusion_size": [46, 40],
             "anchor": "bottom_right" 
@@ -229,7 +229,8 @@ class grab_arms():
 
         self.reverse = False
         self.destroy = False
-        self.duration = 0.22
+        pixels = 44
+        self.duration = pixels/self.BASE_SPEED
         self.duration_timer = 0
 
         
@@ -265,25 +266,40 @@ class grab_arms():
             buffer_downright=[self.buffer_right, self.buffer_down],
             anchor = self.anchor)
         
-        if self.anchor == "bottom_left":
+        if self.anchor == "top_left":
             front_occ_x = 0
             back_occ_x = 0
+            front_occ_y = 0
+            back_occ_y = 0
+
+        elif self.anchor == "top_right":
+            front_occ_x = self.front_arms.surface.get_width() - self.occlusion_width
+            back_occ_x = self.back_arms.surface.get_width() - self.occlusion_width
+            front_occ_y = 0
+            back_occ_y = 0
+
+        
+        elif self.anchor == "bottom_left":
+            front_occ_x = 0
+            back_occ_x = 0
+            front_occ_y = self.front_arms.surface.get_height() - self.occlusion_height
+            back_occ_y = self.back_arms.surface.get_height() - self.occlusion_height
+        
         elif self.anchor == "bottom_right":
             front_occ_x = self.front_arms.surface.get_width() - self.occlusion_width
             back_occ_x = self.back_arms.surface.get_width() - self.occlusion_width
-        else:
-            front_occ_x = 0
-            back_occ_x = 0
+            front_occ_y = self.front_arms.surface.get_height() - self.occlusion_height
+            back_occ_y = self.back_arms.surface.get_height() - self.occlusion_height
 
         self.front_occlusion = self.front_arms.create_occlusion_rect(
             front_occ_x,
-            0,
+            front_occ_y,
             self.occlusion_width, 
             self.occlusion_height,
         )   
         self.back_occlusion = self.back_arms.create_occlusion_rect(
             back_occ_x,
-            0,
+            back_occ_y,
             self.occlusion_width, 
             self.occlusion_height,
         )
