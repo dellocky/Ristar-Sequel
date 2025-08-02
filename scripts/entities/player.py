@@ -161,7 +161,7 @@ class player(physics_sprite):
         if keys[pygame.K_SPACE] and self.jumps_current > 0: 
             for event in event_loop:
                 if event.type == pygame.KEYDOWN and event.key == 32 and self.collide_ground and self.movement_options['jump']:
-                    self.current_velocity[1] = -240
+                    self.current_velocity[1] = -270
                     self.movement = "jumping"
                     self.animate_movement()
                     self.current_animation.change_animation()
@@ -169,7 +169,7 @@ class player(physics_sprite):
                     #self.jumps_current -= 1
 
         #Grabbing
-        if keys[pygame.K_e]:
+        if keys[101]:
             for event in event_loop:
                 if event.type == pygame.KEYDOWN and event.key == 101 and self.movement_options['grab']:
                     grab_direction = get_direction(keys)

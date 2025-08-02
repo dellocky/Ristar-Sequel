@@ -56,14 +56,9 @@ class camera:
                     offset_pos = (sprite.pos[0] - self.offset[0], sprite.pos[1] - self.offset[1])
                     display.blit(sprite.surface, offset_pos)
                     if sprite.draw_hitbox_rect == True:
-                        pygame.draw.rect(sprite.hitbox_surf, (0, 0, 255), sprite.hitbox_rect)
-                        display.blit(sprite.hitbox_surf, (sprite.hitbox_rect.left - self.offset[0], sprite.hitbox_rect.top - self.offset[1]))
-    
-    def draw_ui(self, display, *sprites):
-        for sprite_groups in sprites:
-            for sprite in sprite_groups:
-                display.blit(sprite.surface, sprite.pos)
-             
+                        rect_pos = sprite.hitbox_rect.move(-self.offset[0], -self.offset[1])
+                        pygame.draw.rect(display, (0, 0, 255), rect_pos, 1)  # 1 = line width
+      
         
     """
     #if sprite.occlude: keep this, its fun!!!

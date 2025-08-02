@@ -4,7 +4,7 @@ from scripts.entities.sprite import sprite
 
 class grab_arms():
     # Direction configurations
-    BASE_SPEED = 150
+    BASE_SPEED = 250
     DIRECTION_CONFIG = {
         "ground":{
         "left": {
@@ -37,9 +37,9 @@ class grab_arms():
                 "front": "assets/pictures/projectiles/arms/front/left/0.png",
                 "back": "assets/pictures/projectiles/arms/back/left/0.png"
             },
-            "buffers": {"left": 45, "right": 0, "up": 0, "down": 0},
-            "pos_offset": [-52, 16],
-            "speed": [-BASE_SPEED, 0],
+            "buffers": {"left": 0, "right": 0, "up": 45, "down": 0},
+            "pos_offset": [-52, 61],
+            "speed": [0, BASE_SPEED],
             "arm_stagger": [4, 6],
             "occlusion_size": [46, 40],
             "anchor": "bottom_left" 
@@ -232,8 +232,6 @@ class grab_arms():
         pixels = 44
         self.duration = pixels/self.BASE_SPEED
         self.duration_timer = 0
-
-        
         self.action = "init"
         front, back = groups[0], groups[1]
 
@@ -248,19 +246,21 @@ class grab_arms():
             front_pos, 
             [front], 
             pos, 
-            [5, 5], 
+            [10, 10],  # Small hitbox for intersection point
             arm_image_front,
             buffer_leftup=[self.buffer_left, self.buffer_up],
             buffer_downright=[self.buffer_right, self.buffer_down],
             anchor = self.anchor
         )
+        self.front_arms.draw_hitbox_rect = True
+        self.hitbox_rect = self.front_arms.hitbox_rect  # Store reference to hitbox for easy access
         
         self.back_arms = sprite(
             "Arms_Back", 
             back_pos, 
             [back], 
             pos, 
-            [5, 5], 
+            [0, 0], 
             arm_image_back,
             buffer_leftup=[self.buffer_left, self.buffer_up],
             buffer_downright=[self.buffer_right, self.buffer_down],
@@ -338,6 +338,37 @@ class grab_arms():
                 self.front_arms.image_offset[1] += frame_movement[1]
                 self.back_arms.image_offset[1] += frame_movement[1]
 
+        # Use copies to avoid mutating the original offsets (which causes glitches)
+        front_arms_true_offset = list(self.front_arms.image_offset)
+        back_arms_true_offset = list(self.back_arms.image_offset)
+
+        if self.anchor == "top_right":
+            front_arms_true_offset[0] = self.front_arms.image_offset[0] * -1
+            back_arms_true_offset[0] = self.back_arms.image_offset[0] * -1
+        elif self.anchor == "bottom_left":
+            front_arms_true_offset[1] = self.front_arms.image_offset[1] * -1
+            back_arms_true_offset[1] = self.back_arms.image_offset[1] * -1
+        elif self.anchor == "bottom_right":
+            front_arms_true_offset[0] = self.front_arms.image_offset[0] * -1
+            back_arms_true_offset[0] = self.back_arms.image_offset[0] * -1
+            front_arms_true_offset[1] = self.front_arms.image_offset[1] * -1
+            back_arms_true_offset[1] = self.back_arms.image_offset[1] * -1
+
+        front_center = [
+            self.front_arms.pos[0] + front_arms_true_offset[0] + self.front_arms.surface.get_width() // 2,
+            self.front_arms.pos[1] + front_arms_true_offset[1] + self.front_arms.surface.get_height() // 2
+        ]
+        back_center = [
+            self.back_arms.pos[0] + back_arms_true_offset[0] + self.back_arms.surface.get_width() // 2,
+            self.back_arms.pos[1] + back_arms_true_offset[1] + self.back_arms.surface.get_height() // 2
+        ]
+
+        intersection_x = (front_center[0] + back_center[0]) // 2
+        intersection_y = (front_center[1] + back_center[1]) // 2
+
+        self.hitbox_rect.x = intersection_x - 7
+        self.hitbox_rect.y = intersection_y - 6
+         
         self.front_arms.update()
         self.back_arms.update()
     

@@ -11,7 +11,7 @@ class physics_sprite(sprite):
 
     def fall(self, delta_time):
         if self.current_velocity[1] < 4000:
-                self.current_velocity[1] += 700 * delta_time
+                self.current_velocity[1] += 900 * delta_time
      
     def collision_detection_x(self):
         current_tiles = []

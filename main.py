@@ -3,11 +3,12 @@ from time import time
 from scripts.levels.level_mananger import level_manager
 from scripts.library.objects.settings import settings
 
-
 class game:
     def __init__(self):
         pygame.init()
         self.screen =  pygame.display.set_mode((1440, 810))
+        pygame.display.set_caption(settings.WINDOW_NAME)
+        pygame.display.set_icon(pygame.image.load('assets/icon.ico'))
         self.display = pygame.Surface((400, 225))
         self.clock=pygame.time.Clock()
         self.previous_time = time()
