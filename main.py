@@ -21,7 +21,7 @@ class game:
             delta_time = self.time-self.previous_time
             self.previous_time = self.time
             event_list =  pygame.event.get()
-            self.display.fill('white')
+            self.display.fill((255, 255, 255)) 
             self.level_manager.run(event_list, delta_time, self.display)
 
             for event in event_list:

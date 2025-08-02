@@ -5,7 +5,6 @@ with open('config/save_files/account_save_file.json', 'r') as file:
     account_save_file_data = json.load(file) 
     generate_window_name = bool(account_save_file_data['generate_window_name'])
 
-print(generate_window_name)
 class Settings:
     def __init__(self):
         self.TILE_SIZE = 32

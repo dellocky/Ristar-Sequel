@@ -11,7 +11,7 @@ from scripts.library.objects.settings import settings
 class rundune_1:
     def __init__(self, display):
 
-        
+        self.finish = False
         self.wall_sprites = sprite_group()
         self.back_sprites = sprite_group()
         self.entity_sprites = sprite_group()
