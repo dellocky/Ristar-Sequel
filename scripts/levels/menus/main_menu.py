@@ -1,4 +1,5 @@
 import pygame
+from sys import exit
 
 class main_menu:
     def __init__(self, display):
@@ -7,7 +8,7 @@ class main_menu:
         self.font = pygame.font.Font(None, 36)
         self.selected_rgb = (0, 255, 0)
         self.non_selected_rgb = (255, 255, 255)
-        self.menu_items = ["Play", "Options"]
+        self.menu_items = ["Play", "Options", "Exit"]
         self.selected_index = 0
 
     def run(self, event_list, delta_time, display):
@@ -22,6 +23,9 @@ class main_menu:
                     if self.menu_items[self.selected_index] == "Play":
                         self.finish = True
                         self.new_level = 'rundune_1'  
+                    if self.menu_items[self.selected_index] == "Exit":
+                        pygame.quit()
+                        exit()
                     else:
                         print(f"Selected: {self.menu_items[self.selected_index]}")  # Placeholder for actual game start logic
 
@@ -29,5 +33,5 @@ class main_menu:
         for i, item in enumerate(self.menu_items):
             color = self.selected_rgb if i == self.selected_index else self.non_selected_rgb
             text_surface = self.font.render(item, True, color)
-            y = 50 + i * 100
+            y = 50 + i * 60
             display.blit(text_surface, (display.get_width() // 2 - text_surface.get_width() // 2, y))
