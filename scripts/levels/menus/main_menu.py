@@ -2,17 +2,17 @@ import pygame
 from sys import exit
 
 class main_menu:
-    def __init__(self, display):
+    def __init__(self, display, return_to_index=None):
         self.finish = False
         self.display = display
         self.font = pygame.font.Font(None, 36)
         self.selected_rgb = (0, 255, 0)
         self.non_selected_rgb = (255, 255, 255)
         self.menu_items = ["Play", "Options", "Exit"]
-        self.selected_index = 0
+        self.selected_index = return_to_index if return_to_index is not None else 0
 
     def run(self, event_list, delta_time, display):
-        display.fill((0, 0, 0))  # Clear the display with a black background
+        display.fill((0, 0, 0))  
         for event in event_list:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -23,7 +23,10 @@ class main_menu:
                     if self.menu_items[self.selected_index] == "Play":
                         self.finish = True
                         self.new_level = 'rundune_1'  
-                    if self.menu_items[self.selected_index] == "Exit":
+                    elif self.menu_items[self.selected_index] == "Options":
+                        self.finish = True
+                        self.new_level = 'options_menu'
+                    elif self.menu_items[self.selected_index] == "Exit":
                         pygame.quit()
                         exit()
                     else:

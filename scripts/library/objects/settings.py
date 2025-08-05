@@ -5,6 +5,9 @@ with open('config/save_files/account_save_file.json', 'r') as file:
     account_save_file_data = json.load(file) 
     generate_window_name = bool(account_save_file_data['generate_window_name'])
 
+with open('config/settings/video_settings.json', 'r') as file:
+    video_settings = json.load(file)
+
 class Settings:
     def __init__(self):
         self.TILE_SIZE = 32
@@ -19,6 +22,7 @@ class Settings:
             account_save_file_data['generate_window_name'] = True
             with open('config/save_files/account_save_file.json', 'w') as file:
                 json.dump(account_save_file_data, file, indent=4)
+        self.RESOLUTION = tuple(video_settings['resolution'])
 
 settings = Settings()
 

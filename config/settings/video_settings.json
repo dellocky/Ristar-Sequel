@@ -1,0 +1,9 @@
+{
+    "resolution": [
+        1680,
+        945
+    ],
+    "fullscreen": false,
+    "use_maximum_framerate": true,
+    "maximum_framerate": 80
+}

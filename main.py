@@ -2,11 +2,13 @@ import pygame, sys, scripts.library.functions.debug as debug
 from time import time
 from scripts.levels.level_mananger import level_manager
 from scripts.library.objects.settings import settings
+from os import environ
+environ['SDL_VIDEO_CENTERED'] = '1'
 
 class game:
     def __init__(self):
         pygame.init()
-        self.screen =  pygame.display.set_mode((1440, 810))
+        self.screen =  pygame.display.set_mode(settings.RESOLUTION)
         pygame.display.set_caption(settings.WINDOW_NAME)
         pygame.display.set_icon(pygame.image.load('assets/icon.ico'))
         self.display = pygame.Surface((400, 225))
