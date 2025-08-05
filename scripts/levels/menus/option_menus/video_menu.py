@@ -13,7 +13,7 @@ class video_menu:
         self.menu_items = ["Resolution"]
         self.selected_index = 0
         self.active_menu = False
-        self.dropdown_open = None 
+        self.dropdown_open = None   
         self.dropdown_index = 0
         self.resolution_options = [
             (480, 270),
